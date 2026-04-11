@@ -1,0 +1,15 @@
+name = "scp-card-battle-api"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# KV namespace for battle result cache (shared across all users)
+[[kv_namespaces]]
+binding = "BATTLE_CACHE"
+id = "040964074c3e4d9d9d6ba1a8dc965b66"
+
+# Optional: KV namespace for rate limiting
+# Create with: npx wrangler kv namespace create RATE_LIMIT
+# Then uncomment and paste the id below:
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT"
+# id = "your-kv-namespace-id"

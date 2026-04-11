@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SCP Card Battle</title>
+<meta name="description" content="SCP財団をテーマにしたカードバトルゲーム。250体以上のSCPカードを集めてデッキを組み、オンライン対戦に挑め。">
+<meta name="theme-color" content="#08090c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- OGP -->
+<meta property="og:title" content="SCP Card Battle">
+<meta property="og:description" content="Collect 250+ SCP cards, build your deck, and battle online. An SCP Foundation fan-made card game.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://settlabs.app/scp_card_battle/og-image.png">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SCP Card Battle">
+<meta name="twitter:description" content="Collect 250+ SCP cards, build your deck, and battle online.">
+<meta name="twitter:image" content="https://settlabs.app/scp_card_battle/og-image.png">
+<!-- Favicon & PWA -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.svg">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" integrity="sha384-sEVIly94UBRLKWdkYoPpSG7GD/e79YHMrxVyZaOk712Ga7+EAw6w1EFi+xBzBdd+" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" integrity="sha384-1/m+A1jVWbD3yiK3/vtFvm1+LjK1WLpSoDY+Kaxppwn/yP9BVSgdHTNQVOjrzUO5" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" integrity="sha384-EkqK+ezBWJuvO3hfrSx2iVqr3YQbhmnzn8kPhOpBZ+0GMVU5oGSgptwIu8D84HjE" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check-compat.js" integrity="sha384-E3vxFxXu8FhW5kvqdQJ5Yf8ugrV7iCJP8jgnItRH2Rk8Q08cJzJGTi/oMC3FEp3j" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="styles.css?v=0.1.0">
+</head>
+<body>
+
+<header>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="ja" onclick="setLang('ja')">JP</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+  <h1>SCP <span>CARD</span> BATTLE</h1>
+  <button class="tutorial-btn" onclick="startTutorial()">GUIDE</button>
+  <div id="coinDisplay" style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;color:var(--gold);margin-top:4px;letter-spacing:1px">COIN: <span id="coinCount">0</span></div>
+</header>
+
+<nav class="tab-nav">
+  <button class="active" onclick="switchTab('pack')">PACK</button>
+  <button onclick="switchTab('collection')">COLLECTION</button>
+  <button onclick="switchTab('deck')">DECK</button>
+  <button onclick="switchTab('battle')">BATTLE</button>
+  <button onclick="switchTab('rank')">RANK</button>
+</nav>
+
+<!-- PACK TAB -->
+<div id="tab-pack" class="tab-content active">
+  <div style="text-align:center;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="btn btn-gold" id="coinPackBtn" onclick="openPackWithCoins()">COIN PACK (100C)</button>
+  </div>
+  <div class="pack-result" id="packResult"></div>
+  <div class="share-bonus" id="shareBonus">
+    <div class="share-bonus-inner">
+      <span class="share-coin-icon">&#x1FA99;</span>
+      <span class="share-bonus-text">SNSシェアで <strong>500 COINS</strong> GET!</span>
+      <button class="btn btn-gold share-btn" id="shareBtn" onclick="doShare()">SHARE</button>
+    </div>
+  </div>
+</div>
+
+<!-- COLLECTION TAB -->
+<div id="tab-collection" class="tab-content">
+  <h3 style="text-align:center;margin-bottom:12px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:2px">
+    COLLECTION <span id="collCount">0</span>/<span id="collTotal">34</span>
+  </h3>
+  <div class="deck-filters">
+    <div class="deck-filter-row">
+      <button class="df-btn active" onclick="setCollFilter('all',this)">ALL</button>
+      <button class="df-btn df-safe" onclick="setCollFilter('safe',this)">SAFE</button>
+      <button class="df-btn df-euclid" onclick="setCollFilter('euclid',this)">EUCLID</button>
+      <button class="df-btn df-keter" onclick="setCollFilter('keter',this)">KETER</button>
+      <button class="df-btn df-thaumiel" onclick="setCollFilter('thaumiel',this)">THAUMIEL</button>
+    </div>
+    <div class="deck-filter-row">
+      <button class="df-sort active" onclick="setCollSort('id',this)">SCP番号</button>
+      <button class="df-sort" onclick="setCollSort('cost-asc',this)">コスト↑</button>
+      <button class="df-sort" onclick="setCollSort('cost-desc',this)">コスト↓</button>
+      <button class="df-sort" onclick="setCollSort('name',this)">名前</button>
+      <button class="df-sort" onclick="setCollSort('type',this)">タイプ</button>
+    </div>
+  </div>
+  <div class="coll-rewards" id="collRewards"></div>
+  <div class="collection-grid" id="collectionGrid"></div>
+</div>
+
+<!-- DECK TAB -->
+<div id="tab-deck" class="tab-content">
+  <h3 style="text-align:center;margin-bottom:12px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:2px">DECK BUILDER</h3>
+  <div class="deck-slot-tabs" id="deckSlotTabs"></div>
+  <div class="cost-limit-select" id="costLimitSelect"></div>
+  <div class="cost-bar"><div class="cost-bar-fill" id="costBarFill"></div></div>
+  <div class="cost-info">
+    <span id="costCurrent">COST: 0</span>
+    <span id="costMax">LIMIT: 20</span>
+  </div>
+  <div class="deck-slots" id="deckSlots"></div>
+  <div style="text-align:center;margin-bottom:16px">
+    <button class="btn btn-gold" id="saveDeckBtn" onclick="saveDeck()" disabled>SAVE DECK</button>
+  </div>
+  <div class="deck-available">
+    <h4>AVAILABLE CARDS</h4>
+    <div class="deck-filters">
+      <div class="deck-filter-row">
+        <button class="df-btn active" data-cls="all" onclick="setDeckFilter('all',this)">ALL</button>
+        <button class="df-btn df-safe" data-cls="safe" onclick="setDeckFilter('safe',this)">SAFE</button>
+        <button class="df-btn df-euclid" data-cls="euclid" onclick="setDeckFilter('euclid',this)">EUCLID</button>
+        <button class="df-btn df-keter" data-cls="keter" onclick="setDeckFilter('keter',this)">KETER</button>
+        <button class="df-btn df-thaumiel" data-cls="thaumiel" onclick="setDeckFilter('thaumiel',this)">THAUMIEL</button>
+      </div>
+      <div class="deck-filter-row">
+        <button class="df-role active" onclick="setDeckRoleFilter('all',this)">ALL</button>
+        <button class="df-role df-attacker" onclick="setDeckRoleFilter('attacker',this)">⚔ ATTACKER</button>
+        <button class="df-role df-supporter" onclick="setDeckRoleFilter('supporter',this)">✚ SUPPORTER</button>
+      </div>
+      <div class="deck-filter-row">
+        <span class="df-label">SORT:</span>
+        <button class="df-sort active" data-sort="id" onclick="setDeckSort('id',this)">SCP番号</button>
+        <button class="df-sort" data-sort="cost-asc" onclick="setDeckSort('cost-asc',this)">コスト↑</button>
+        <button class="df-sort" data-sort="cost-desc" onclick="setDeckSort('cost-desc',this)">コスト↓</button>
+        <button class="df-sort" data-sort="name" onclick="setDeckSort('name',this)">名前</button>
+        <button class="df-sort" data-sort="type" onclick="setDeckSort('type',this)">タイプ</button>
+      </div>
+    </div>
+    <div class="collection-grid" id="deckCardGrid"></div>
+  </div>
+</div>
+
+<!-- BATTLE TAB -->
+<div id="tab-battle" class="tab-content">
+  <div id="battleWarning" class="battle-warning" style="display:none">
+    <span id="deckWarning">デッキが保存されていません。DECKタブでデッキを構築・保存してください。</span>
+  </div>
+
+  <!-- Player Name Registration -->
+  <div id="playerNameArea" class="deck-share-section" style="display:none;text-align:center">
+    <h4>PLAYER NAME</h4>
+    <p id="registerPrompt" style="font-size:0.7rem;color:var(--muted);margin-bottom:8px">対戦に参加するにはプレイヤー名を登録してください</p>
+    <div class="deck-code-row" style="justify-content:center">
+      <input id="playerNameInput" placeholder="プレイヤー名" class="deck-code-input" style="max-width:200px;text-align:center" maxlength="20">
+      <button class="btn btn-gold" id="registerBtn" onclick="registerPlayerName()">登録</button>
+    </div>
+  </div>
+
+  <!-- Daily Missions -->
+  <div id="dailyMissions" class="daily-missions"></div>
+
+  <!-- Matchmaking -->
+  <div id="battleModeArea" style="display:none">
+    <div class="match-screen">
+      <div class="match-screen-title">MATCHMAKING</div>
+      <div class="match-vs-display">
+        <div class="match-player-card" id="matchPlayerCard"></div>
+        <div class="match-vs-text">VS</div>
+        <div class="match-player-card" id="matchEnemyCard"></div>
+      </div>
+      <div class="match-spinner" id="matchSpinner"></div>
+      <div class="match-status" id="matchStatus">SEARCHING...</div>
+      <button class="btn" id="battleGoBtn" style="display:none;margin:16px auto 0" onclick="confirmMatch()">BATTLE START</button>
+    </div>
+  </div>
+
+  <div id="battleArea" style="display:none">
+    <div class="battle-hand ai-hand-area" id="aiHandArea">
+      <h4><span style="color:var(--danger)">ENEMY DECK</span> <span class="ai-next-label" id="aiNextLabel"></span></h4>
+      <div class="hand-cards" id="aiHandCards"></div>
+    </div>
+    <div class="battle-arena">
+      <div class="battle-header">
+        <div class="battle-score"><span class="player" id="pScore">0</span> - <span class="draw-score" id="drawScore">0</span> - <span class="ai" id="aiScore">0</span></div>
+        <div class="battle-round" id="roundInfo">ROUND 0 / 5</div>
+      </div>
+      <div class="battle-field" id="battleField">
+        <div class="battle-side player-side">
+          <div class="battle-card-slot" id="playerSlot">PLAYER</div>
+          <div class="battle-card-slot supporter-slot" id="playerSupporterSlot">SUPPORTER</div>
+        </div>
+        <div class="battle-vs">VS</div>
+        <div class="battle-side ai-side">
+          <div class="battle-card-slot" id="aiSlot">AI</div>
+          <div class="battle-card-slot supporter-slot" id="aiSupporterSlot">SUPPORTER</div>
+        </div>
+      </div>
+      <div class="battle-narrative" id="narrativeBox" style="display:none">
+        <div id="narrativeContent"></div>
+      </div>
+    </div>
+    <div class="battle-hand" id="handArea">
+      <h4>YOUR HAND <span id="tapHint" style="font-size:0.6rem;color:var(--muted);font-weight:400;letter-spacing:1px">— タップで選択</span></h4>
+      <div class="hand-cards" id="handCards"></div>
+    </div>
+    <div class="battle-controls">
+      <button class="btn btn-danger" id="battleStartBtn" onclick="doBattle()" disabled>BATTLE START</button>
+    </div>
+    <div id="battleResult" style="display:none"></div>
+  </div>
+</div>
+
+<!-- RANK TAB -->
+<div id="tab-rank" class="tab-content">
+  <div class="rank-header">
+    <div class="rank-season" id="rankSeason"></div>
+    <div class="rank-points" id="rankPoints">0</div>
+    <div class="rank-points-label">RANK POINTS</div>
+  </div>
+  <div class="rank-tier" id="rankTier"></div>
+  <div class="rank-stats">
+    <div class="rank-stat"><div class="stat-val" id="rankWins" style="color:var(--win)">0</div><div class="stat-label">WIN</div></div>
+    <div class="rank-stat"><div class="stat-val" id="rankDraws" style="color:var(--draw)">0</div><div class="stat-label">DRAW</div></div>
+    <div class="rank-stat"><div class="stat-val" id="rankLosses" style="color:var(--lose)">0</div><div class="stat-label">LOSE</div></div>
+    <div class="rank-stat"><div class="stat-val" id="rankTotal">0</div><div class="stat-label">TOTAL</div></div>
+  </div>
+  <div class="rank-point-change" id="rankLastChange"></div>
+  <button class="btn rank-rewards-toggle" onclick="toggleRankRewards()">▼ 報酬を表示</button>
+  <div class="rank-rewards" id="rankRewards"></div>
+  <div class="rank-board" id="rankBoard"></div>
+  <div class="rank-reset-info" id="rankResetInfo"></div>
+</div>
+
+
+<footer class="site-footer">
+  <p>
+    This is a fan-made game based on the <a href="https://scp-wiki.wikidot.com/" target="_blank" rel="noopener">SCP Foundation</a>.
+    All SCP content used in this game (names, descriptions, abilities) is adapted from the SCP Wiki and is licensed under
+    <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">Creative Commons Attribution-ShareAlike 3.0</a>.
+    Individual authors are credited on each SCP article at the SCP Wiki.
+  </p>
+  <p class="footer-sub">
+    Original SCP Foundation works &copy; SCP Wiki and its contributors.
+    This derivative work is also released under <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>.
+    This game is an unofficial fan project and is not affiliated with, authorized, or endorsed by the SCP Foundation or the SCP Wiki.
+  </p>
+  <p class="footer-sub">
+    Fonts: <a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts</a> (Courier Prime, Special Elite, Share Tech Mono) — <a href="https://openfontlicense.org/" target="_blank" rel="noopener">SIL Open Font License 1.1</a>.
+  </p>
+  <p class="footer-sub">
+    Game code &copy; 2026 — released under the MIT License. Source: <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>.
+  </p>
+  <p class="footer-version">v0.5.0</p>
+</footer>
+
+<script src="data/scps.js?v=0.1.0"></script>
+<script src="data/silhouettes.js?v=0.1.0"></script>
+<script src="data/presets.js?v=0.1.0"></script>
+<script src="i18n.js?v=0.1.0"></script>
+<script src="game.js?v=0.1.0"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

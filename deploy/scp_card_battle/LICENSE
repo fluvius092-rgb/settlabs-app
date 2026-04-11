@@ -1,0 +1,73 @@
+SCP Card Battle - License Information
+======================================
+
+This project combines original code (MIT) with content adapted from
+the SCP Foundation (CC BY-SA 3.0). The game as a whole is therefore
+distributed under CC BY-SA 3.0 to satisfy the ShareAlike requirement.
+
+------------------------------------------------------------
+1. Game Code (original work)
+------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2026 SCP Card Battle contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+------------------------------------------------------------
+2. SCP Foundation Content
+------------------------------------------------------------
+
+All SCP item names, descriptions, abilities, and other narrative content
+used in this game are adapted from works on the SCP Wiki
+(https://scp-wiki.wikidot.com/) and are licensed under the
+Creative Commons Attribution-ShareAlike 3.0 Unported License (CC BY-SA 3.0).
+
+Full license text: https://creativecommons.org/licenses/by-sa/3.0/legalcode
+
+Individual authors are credited on each SCP article page on the SCP Wiki.
+A list of source URLs for each SCP item used in this game is available
+in `LICENSE-CC-BY-SA-3.0.md` (one URL per article, ordered by SCP id).
+
+The SCP Foundation, its logo, and all associated content are the property
+of the SCP Wiki community and its contributors. This is an unofficial
+fan project and is not affiliated with, authorized by, or endorsed by
+the SCP Foundation, the SCP Wiki, or any of its contributors.
+
+------------------------------------------------------------
+3. Combined Work
+------------------------------------------------------------
+
+Because this project incorporates SCP content under CC BY-SA 3.0,
+the combined work (game data + assets + presentation) is also released
+under CC BY-SA 3.0. Anyone redistributing or creating derivative works
+must:
+  - attribute the SCP Wiki and its contributors,
+  - retain the original CC BY-SA 3.0 notice,
+  - release derivative works under the same license.
+
+The original code can additionally be reused under the MIT terms above.
+
+------------------------------------------------------------
+4. Third-Party Libraries and Assets
+------------------------------------------------------------
+
+See `THIRD_PARTY_NOTICES.md` for full attribution of fonts, libraries,
+and other third-party components used in this project.

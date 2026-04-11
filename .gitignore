@@ -1,0 +1,16 @@
+# Claude Code の内部ファイル
+.claude/
+
+# Wrangler（Cloudflare）の一時ファイル
+.wrangler/
+
+# Node.js
+node_modules/
+
+# OS生成ファイル
+.DS_Store
+Thumbs.db
+
+# 環境変数・シークレット
+.env
+.env.local

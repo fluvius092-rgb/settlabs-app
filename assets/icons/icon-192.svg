@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="24" fill="#08090c"/>
+  <circle cx="96" cy="86" r="52" fill="none" stroke="#00c8f0" stroke-width="4"/>
+  <circle cx="96" cy="86" r="38" fill="none" stroke="#00c8f0" stroke-width="2" opacity="0.5"/>
+  <path d="M96 42 L101 72 H91 Z" fill="#00c8f0"/>
+  <path d="M96 130 L91 100 H101 Z" fill="#00c8f0"/>
+  <path d="M52 86 L82 81 V91 Z" fill="#00c8f0"/>
+  <path d="M140 86 L110 91 V81 Z" fill="#00c8f0"/>
+  <text x="96" y="92" text-anchor="middle" font-family="monospace" font-weight="bold" font-size="22" fill="#00c8f0">SCP</text>
+  <text x="96" y="164" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="16" fill="#00c8f0" letter-spacing="2">CARD BATTLE</text>
+</svg>

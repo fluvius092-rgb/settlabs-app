@@ -1,0 +1,31 @@
+{
+  "name": "SCP Card Battle",
+  "short_name": "SCP Battle",
+  "description": "SCP財団をテーマにしたカードバトルゲーム",
+  "start_url": "/scp_card_battle/",
+  "scope": "/scp_card_battle/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08090c",
+  "theme_color": "#08090c",
+  "icons": [
+    {
+      "src": "/scp_card_battle/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/scp_card_battle/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/scp_card_battle/icon-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

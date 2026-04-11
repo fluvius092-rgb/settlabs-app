@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#08090c"/>
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#00c8f0" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="16" fill="none" stroke="#00c8f0" stroke-width="1.2" opacity="0.5"/>
+  <path d="M32 14 L34.5 26 H29.5 Z" fill="#00c8f0"/>
+  <path d="M32 50 L29.5 38 H34.5 Z" fill="#00c8f0"/>
+  <path d="M14 32 L26 29.5 V34.5 Z" fill="#00c8f0"/>
+  <path d="M50 32 L38 34.5 V29.5 Z" fill="#00c8f0"/>
+  <text x="32" y="36" text-anchor="middle" font-family="monospace" font-weight="bold" font-size="11" fill="#00c8f0">SCP</text>
+</svg>

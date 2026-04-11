@@ -1,0 +1,500 @@
+[
+  {
+    "id": "SCP-682",
+    "name": "Hard Reptile",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-106",
+    "name": "The Old Man",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-076",
+    "name": "Able",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-2399",
+    "name": "Martian Destroyer",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-343",
+    "name": "God",
+    "cls": "thaumiel",
+    "cost": 10
+  },
+  {
+    "id": "SCP-179",
+    "name": "Sauelsuepp",
+    "cls": "thaumiel",
+    "cost": 8
+  },
+  {
+    "id": "SCP-953",
+    "name": "Polymorphic Humanoid",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-610",
+    "name": "The Flesh that Hates",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-1000",
+    "name": "Bigfoot",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-2317",
+    "name": "Door to Darkness",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-3000",
+    "name": "Anantashesha",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-2000",
+    "name": "Deus Ex Machina",
+    "cls": "thaumiel",
+    "cost": 9
+  },
+  {
+    "id": "SCP-073",
+    "name": "Cain",
+    "cls": "thaumiel",
+    "cost": 6
+  },
+  {
+    "id": "SCP-105",
+    "name": "Iris Thompson",
+    "cls": "thaumiel",
+    "cost": 5
+  },
+  {
+    "id": "SCP-662",
+    "name": "Mr. Deeds",
+    "cls": "thaumiel",
+    "cost": 4
+  },
+  {
+    "id": "SCP-500-D",
+    "name": "Overwritten Alloy",
+    "cls": "thaumiel",
+    "cost": 7
+  },
+  {
+    "id": "SCP-001",
+    "name": "The Gate Guardian",
+    "cls": "thaumiel",
+    "cost": 10
+  },
+  {
+    "id": "SCP-017",
+    "name": "Shadow Person",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-055",
+    "name": "[unknown]",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-169",
+    "name": "The Leviathan",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-217",
+    "name": "The Clockwork Virus",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-239",
+    "name": "The Witch Child",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-354",
+    "name": "The Red Pool",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-575",
+    "name": "Predatory Darkness",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-058",
+    "name": "Heart of Darkness",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-689",
+    "name": "Haunting Bust",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-783",
+    "name": "There Was A Crooked Man",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-940",
+    "name": "Araneae Marionettes",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-1440",
+    "name": "The Old Man from Nowhere",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-2316",
+    "name": "Field Trip",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-2845",
+    "name": "THE DEER",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-3199",
+    "name": "Humans, Refuted",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-3812",
+    "name": "A Voice Behind Me",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-4666",
+    "name": "The Yule Man",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-2003",
+    "name": "Preferred Option",
+    "cls": "thaumiel",
+    "cost": 7
+  },
+  {
+    "id": "SCP-3301",
+    "name": "THE FOUNDATION",
+    "cls": "thaumiel",
+    "cost": 8
+  },
+  {
+    "id": "SCP-4010",
+    "name": "Attempt to Look at What We Accomplished",
+    "cls": "thaumiel",
+    "cost": 6
+  },
+  {
+    "id": "SCP-4999",
+    "name": "Someone to Watch Over Us",
+    "cls": "thaumiel",
+    "cost": 5
+  },
+  {
+    "id": "SCP-5000",
+    "name": "Why?",
+    "cls": "thaumiel",
+    "cost": 8
+  },
+  {
+    "id": "SCP-6000",
+    "name": "The Serpent, the Moose, and the Wanderer's Library",
+    "cls": "thaumiel",
+    "cost": 9
+  },
+  {
+    "id": "SCP-020",
+    "name": "Unseen Mold",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-029",
+    "name": "Daughter of Shadows",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-060",
+    "name": "Infernal Occult Skeleton",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-075",
+    "name": "Corrosive Snail",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-077",
+    "name": "Rot Skull",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-231",
+    "name": "Special Personnel Requirements",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-352",
+    "name": "Baba Yaga",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-363",
+    "name": "Not Centipedes",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-469",
+    "name": "Many-Winged Angel",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-597",
+    "name": "The Mother",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-745",
+    "name": "The Headlights",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-835",
+    "name": "Expunged Data Released",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-1529",
+    "name": "King of the Mountain",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-2191",
+    "name": "Dracula Factory",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-2470",
+    "name": "The Void Nullifier",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-2950",
+    "name": "Just A Chair",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-3125",
+    "name": "The Escapee",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-2798",
+    "name": "This Dying World",
+    "cls": "thaumiel",
+    "cost": 7
+  },
+  {
+    "id": "SCP-3480",
+    "name": "Olympus Mons",
+    "cls": "thaumiel",
+    "cost": 8
+  },
+  {
+    "id": "SCP-4100",
+    "name": "Future Imperfect",
+    "cls": "thaumiel",
+    "cost": 6
+  },
+  {
+    "id": "SCP-4200",
+    "name": "The World, Contracted",
+    "cls": "thaumiel",
+    "cost": 7
+  },
+  {
+    "id": "SCP-4290",
+    "name": "The Hospital of the Lord",
+    "cls": "thaumiel",
+    "cost": 5
+  },
+  {
+    "id": "SCP-4514",
+    "name": "The Thing That Kills You",
+    "cls": "thaumiel",
+    "cost": 8
+  },
+  {
+    "id": "SCP-5500",
+    "name": "Death of the Authors",
+    "cls": "thaumiel",
+    "cost": 9
+  },
+  {
+    "id": "SCP-6500",
+    "name": "Inevitable",
+    "cls": "thaumiel",
+    "cost": 10
+  },
+  {
+    "id": "SCP-353",
+    "name": "Vector",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-370",
+    "name": "A Key",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-579",
+    "name": "[DATA EXPUNGED]",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-582",
+    "name": "A Bundle of Stories",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-616",
+    "name": "The Vessel",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-738",
+    "name": "The Devil's Deal",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-804",
+    "name": "World Without Man",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-956",
+    "name": "The Child-Breaker",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-966",
+    "name": "Sleep Killer",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-993",
+    "name": "Bobble the Clown",
+    "cls": "keter",
+    "cost": 6
+  },
+  {
+    "id": "SCP-1055",
+    "name": "Bugsy",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-1730",
+    "name": "What Happened to Site-13?",
+    "cls": "thaumiel",
+    "cost": 8
+  },
+  {
+    "id": "SCP-1983",
+    "name": "Doorway to Nowhere",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-2935",
+    "name": "O, Death",
+    "cls": "keter",
+    "cost": 9
+  },
+  {
+    "id": "SCP-3001",
+    "name": "Red Reality",
+    "cls": "keter",
+    "cost": 8
+  },
+  {
+    "id": "SCP-2030",
+    "name": "LA U GH IS FUN",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-009",
+    "name": "Red Ice",
+    "cls": "keter",
+    "cost": 7
+  },
+  {
+    "id": "SCP-027",
+    "name": "The Vermin God",
+    "cls": "keter",
+    "cost": 6
+  }
+]
