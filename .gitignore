@@ -14,3 +14,7 @@ Thumbs.db
 # 環境変数・シークレット
 .env
 .env.local
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
