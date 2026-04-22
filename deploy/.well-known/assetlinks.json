@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "com.contractreader.app",
+    "package_name": "app.settlabs.contractreader",
     "sha256_cert_fingerprints": [
       "3E:36:33:C1:1D:7E:F2:68:8C:C5:A2:B5:C6:56:BF:28:FF:F5:E3:36:D6:87:05:3D:E8:6A:77:80:9A:17:9F:66"
     ]
