@@ -1,0 +1,30 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'SettLabsはWebゲームとAIアプリを開発・公開している個人サイトです。' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<meta name="description" content={description}>
+<meta name="theme-color" content="#08090c">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7502065458216315" crossorigin="anonymous" is:inline></script>
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #08090c; color: #b8ccd8; font-family: 'Segoe UI', sans-serif; line-height: 1.8; }
+  a { color: #00c8f0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  nav.footer-nav { margin-top: 48px; padding-top: 16px; border-top: 1px solid #1a2a3a; font-size: 0.75rem; color: #4a6070; text-align: center; }
+  nav.footer-nav a { color: #6a8090; text-decoration: none; margin: 0 8px; }
+  nav.footer-nav a:hover { color: #00c8f0; }
+</style>
+</head>
+<body>
+  <slot />
+</body>
+</html>

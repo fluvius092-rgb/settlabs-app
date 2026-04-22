@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+function formatDate(d: Date) {
+  return d.toISOString().slice(0, 10);
+}
+---
+<Base title="Blog — SettLabs" description="SettLabsの開発ブログ。ゲーム開発の裏側や技術メモを発信しています。">
+<style>
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 1.5rem; color: #00c8f0; letter-spacing: 2px; margin-bottom: 4px; }
+  .subtitle { font-size: 0.75rem; color: #4a6070; margin-bottom: 32px; }
+  .post-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+  .post-item { background: #0d1117; border: 1px solid #1a2a3a; border-radius: 8px; padding: 20px 24px; transition: border-color 0.2s; }
+  .post-item:hover { border-color: #00c8f0; }
+  .post-item a { text-decoration: none; display: block; }
+  .post-date { font-size: 0.7rem; color: #4a6070; margin-bottom: 6px; }
+  .post-title { font-size: 1rem; color: #fff; margin-bottom: 6px; }
+  .post-desc { font-size: 0.8rem; color: #6a8090; line-height: 1.6; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .tag { font-size: 0.65rem; color: #4a6070; background: #0a0f18; border: 1px solid #1a2a3a; border-radius: 3px; padding: 1px 6px; }
+  .empty { color: #4a6070; font-size: 0.85rem; }
+</style>
+<div class="wrap">
+  <h1>BLOG</h1>
+  <p class="subtitle">開発日誌・技術メモ</p>
+  {posts.length === 0 ? (
+    <p class="empty">記事はまだありません。</p>
+  ) : (
+    <ul class="post-list">
+      {posts.map(post => (
+        <li class="post-item">
+          <a href={`/blog/${post.id}/`}>
+            <div class="post-date">{formatDate(post.data.pubDate)}</div>
+            <div class="post-title">{post.data.title}</div>
+            <div class="post-desc">{post.data.description}</div>
+            {post.data.tags && (
+              <div class="tags">
+                {post.data.tags.map(tag => <span class="tag">{tag}</span>)}
+              </div>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+  <nav class="footer-nav">
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/privacy.html">Privacy Policy</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+</div>
+</Base>
