@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com; connect-src https://api.anthropic.com https://api.currentsapi.services; base-uri 'self'; form-action 'none'; frame-ancestors 'none'">
 <title>IADM — Indo-Pacific Air & Defense Monitor</title>
-<meta name="description" content="日本周辺の領空・領海侵犯、北朝鮮ミサイル発射、台湾ADIZ侵入をリアルタイム可視化するインド太平洋圏防衛モニター。5言語対応・無料。">
-<meta property="og:title" content="IADM — Indo-Pacific Air & Defense Monitor">
-<meta property="og:description" content="日本周辺の領空・領海侵犯、北朝鮮ミサイル、台湾ADIZ侵入を可視化する防衛ダッシュボード">
-<meta property="og:url" content="https://settlabs.app/jadm/">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
@@ -114,6 +107,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .leaflet-control-zoom a:hover{background:var(--surface2)!important;}
 .leaflet-tooltip{background:rgba(22,27,34,.96)!important;color:var(--text)!important;border:1px solid var(--border)!important;box-shadow:0 4px 12px rgba(0,0,0,.4)!important;font-family:var(--mono);font-size:11px;line-height:1.6;backdrop-filter:blur(8px);}
 .leaflet-tooltip-top:before,.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{border-top-color:var(--border)!important;border-bottom-color:var(--border)!important;border-left-color:var(--border)!important;border-right-color:var(--border)!important;}
+.country-label{font-family:var(--sans);font-size:11px;font-weight:600;color:rgba(180,200,220,0.55);text-align:center;text-shadow:0 0 4px rgba(0,0,0,0.9),0 0 8px rgba(0,0,0,0.7);letter-spacing:1px;pointer-events:none;}
 .inc-marker{width:40px;height:40px;}
 .inc-marker .pulse{position:absolute;top:50%;left:50%;width:12px;height:12px;border-radius:50%;border:1.5px solid;transform:translate(-50%,-50%) scale(var(--ms,1));animation:incpulse 2s ease-out infinite;pointer-events:none;}
 @keyframes incpulse{0%{transform:translate(-50%,-50%) scale(calc(var(--ms,1) * 0.5));opacity:0.7;}100%{transform:translate(-50%,-50%) scale(calc(var(--ms,1) * 2));opacity:0;}}
@@ -125,7 +119,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .inc-marker .cross::before,.inc-marker .cross::after{content:'';position:absolute;background:currentColor;opacity:0.4;}
 .inc-marker .cross::before{left:0;right:0;top:50%;height:1px;transform:translateY(-50%);}
 .inc-marker .cross::after{top:0;bottom:0;left:50%;width:1px;transform:translateX(-50%);}
-.inc-marker .tri{position:absolute;top:50%;left:50%;transform:translate(-50%,-67%) scale(var(--ms,1));transform-origin:50% 67%;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom-style:solid;border-bottom-width:15px;pointer-events:none;}
+.inc-marker .tri{position:absolute;top:50%;left:50%;transform:translate(-50%,-67%) scale(var(--ms,1));transform-origin:50% 67%;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom-style:solid;border-bottom-width:10px;pointer-events:none;}
 .inc-marker .impact{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(var(--ms,1));font-family:var(--mono);font-weight:bold;font-size:14px;text-shadow:0 0 4px currentColor;pointer-events:none;}
 .missile-arc{animation:dashflow 4s linear infinite;filter:drop-shadow(0 0 3px currentColor);}
 .missile-arc-cruise{animation-duration:2.5s;}
@@ -234,6 +228,22 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .time-count{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:5px;text-align:right;}
 .time-bar{height:3px;background:var(--border-light);border-radius:2px;margin-top:6px;overflow:hidden;}
 .time-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease;}
+
+/* THREAT CHART */
+.chart-area{position:relative;}
+.chart-svg{width:100%;height:90px;display:block;}
+.chart-bar-d{fill:var(--danger);}
+.chart-bar-w{fill:var(--warning);}
+.chart-bar-i{fill:var(--accent);}
+.chart-bar-d:hover,.chart-bar-w:hover,.chart-bar-i:hover{filter:brightness(1.3);}
+.chart-grid{stroke:var(--border-light);stroke-width:0.5;stroke-dasharray:2,3;}
+.chart-tick{font-family:var(--mono);font-size:7px;fill:var(--text-dim);}
+.chart-tooltip{position:absolute;background:rgba(22,27,34,.96);border:1px solid var(--border);border-radius:var(--r);padding:5px 8px;font-family:var(--mono);font-size:10px;pointer-events:none;display:none;z-index:30;backdrop-filter:blur(8px);white-space:nowrap;}
+.chart-tooltip.on{display:block;}
+.chart-legend{display:flex;gap:10px;justify-content:center;margin-top:6px;font-family:var(--mono);font-size:9px;color:var(--text-muted);}
+.chart-legend-item{display:flex;align-items:center;gap:4px;}
+.chart-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.chart-empty{font-family:var(--mono);font-size:10px;color:var(--text-dim);text-align:center;padding:30px 0;}
 </style>
 </head>
 <body>
@@ -256,6 +266,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
     <div class="ma">
       <button class="btn primary" style="flex:1" onclick="saveKeys()">▶ 設定して開始</button>
       <button class="btn" onclick="skipKeys()">デモ表示</button>
+    </div>
+    <div style="margin-top:10px;text-align:center">
+      <button class="btn" style="font-size:10px;opacity:0.85" onclick="useProxy()" data-i="modal_proxy">🌐 サーバープロキシ経由（キー不要・推奨）</button>
     </div>
   </div>
 </div>
@@ -317,25 +330,21 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
       <div class="time-count" id="timeCount"></div>
     </div>
     <div class="ps">
-      <div class="sl" data-i="filter_type">フィルター — タイプ</div>
-      <div class="chips">
-        <div class="chip on" data-f="all" onclick="filterBy('all')" data-i="f_all">ALL</div>
-        <div class="chip" data-f="danger" onclick="filterBy('danger')" data-i="f_violation">侵犯</div>
-        <div class="chip" data-f="warning" onclick="filterBy('warning')" data-i="f_caution">警戒</div>
-        <div class="chip" data-f="info" onclick="filterBy('info')" data-i="f_info">情報</div>
-        <div class="chip" data-f="air" onclick="filterBy('air')" data-i="f_air">領空</div>
-        <div class="chip" data-f="sea" onclick="filterBy('sea')" data-i="f_sea">領海</div>
-        <div class="chip" data-f="eez" onclick="filterBy('eez')">EEZ</div>
-        <div class="chip" data-f="missile" onclick="filterBy('missile')" data-i="f_missile">🚀 弾道</div>
-      </div>
-    </div>
-    <div class="ps">
       <div class="sl" data-i="filter_region">フィルター — 侵犯勢力</div>
       <div class="chips">
         <div class="chip on" data-r="all" onclick="filterRegion('all')" data-i="r_all">全勢力</div>
         <div class="chip" data-r="china" onclick="filterRegion('china')">🇨🇳 <span data-i="r_china">中国</span></div>
         <div class="chip" data-r="russia" onclick="filterRegion('russia')">🇷🇺 <span data-i="r_russia">ロシア</span></div>
         <div class="chip" data-r="nk" onclick="filterRegion('nk')">🇰🇵 <span data-i="r_nk">北朝鮮</span></div>
+      </div>
+    </div>
+    <div class="ps">
+      <div class="sl" data-i="chart_label">脅威レベル推移</div>
+      <div id="chartArea" class="chart-area"></div>
+      <div class="chart-legend">
+        <span class="chart-legend-item"><span class="chart-legend-dot" style="background:var(--danger)"></span><span data-i="stat_violation">侵犯</span></span>
+        <span class="chart-legend-item"><span class="chart-legend-dot" style="background:var(--warning)"></span><span data-i="stat_caution">警戒</span></span>
+        <span class="chart-legend-item"><span class="chart-legend-dot" style="background:var(--accent)"></span><span data-i="stat_info">情報</span></span>
       </div>
     </div>
     <div class="dh">
@@ -490,6 +499,45 @@ const DEMO = [
 
   // ── 統計 ──
   {id:22,level:'info',zone:'air',title:'2025年度スクランブル 595回（前年-15%）',country:'中国・ロシア',asset:'戦闘機 各機種',location:'日本周辺空域 全域',lat:34.0,lng:139.0,datetime:'2026-04-10 14:00',action:'各方面隊が継続警戒',detail:'2025年度の航空自衛隊緊急発進は595回（前年度704回から15%減）。中国機約66%・ロシア機約34%。南西航空方面隊が411回で過半。',source:'統合幕僚監部 2026年4月10日',region:'japan',ds:'s'},
+  // ── 北朝鮮ミサイル 追加 ──
+  {id:23,level:'danger',zone:'missile',title:'火星-11A短距離弾道ミサイル発射',country:'北朝鮮',asset:'火星-11A SRBM',location:'平壌東部',lat:39.0,lng:126.5,landLat:39.4,landLng:130.0,apogee:50,range:300,datetime:'2025-05-08 09:30',action:'韓国合参が監視',detail:'北朝鮮が火星-11A短距離弾道ミサイル数発を発射、東海方向へ。',source:'韓国合同参謀本部 2025年5月8日',region:'nk_missile',ds:'s'},
+  {id:24,level:'danger',zone:'missile',title:'短距離弾道・巡航ミサイル混合発射',country:'北朝鮮',asset:'SRBM・巡航ミサイル',location:'北朝鮮東海岸',lat:39.5,lng:127.5,landLat:39.8,landLng:130.5,apogee:30,range:250,datetime:'2025-05-22 06:00',action:'米韓共同警戒',detail:'北朝鮮が短距離弾道ミサイルと巡航ミサイルを東海方向に複数発射。',source:'韓国合同参謀本部 2025年5月22日',region:'nk_missile',ds:'s'},
+  {id:25,level:'warning',zone:'missile',title:'火星-20 ICBM エンジン地上試験(9回目)',country:'北朝鮮',asset:'火星-20 ICBM (固体燃料)',location:'平壌郊外 試験場',lat:39.2,lng:125.8,datetime:'2025-09-08 12:00',action:'米韓日が衛星監視',detail:'北朝鮮が新型ICBM「火星-20」のエンジン地上試験9回目を実施。多弾頭搭載が可能とされる新たな戦略脅威。',source:'米国防総省 2025年9月8日',region:'nk_missile',ds:'s'},
+  {id:26,level:'info',zone:'missile',title:'火星-20 ICBM 軍事パレード公開',country:'北朝鮮',asset:'火星-20 ICBM (11軸TEL搭載)',location:'平壌・金日成広場',lat:39.04,lng:125.76,datetime:'2025-10-10 11:00',action:'米韓日が脅威評価',detail:'朝鮮労働党創建80周年軍事パレードで新型ICBM「火星-20」を初公開。3基が11軸式発射台に搭載。年内の試験発射を予測。',source:'朝鮮中央通信・米国防総省 2025年10月10日',region:'nk_missile',ds:'s'},
+  {id:43,level:'warning',zone:'missile',title:'北朝鮮駆逐艦「崔賢」進水',country:'北朝鮮',asset:'駆逐艦 崔賢 (5,000トン級)',location:'清津港',lat:41.8,lng:129.8,datetime:'2025-04-25 10:00',action:'米韓日が衛星監視継続',detail:'北朝鮮最大の新型駆逐艦「崔賢」を進水。後に巡航・対艦ミサイル発射プラットフォームとして運用。海軍力強化の象徴。',source:'米国防総省 2025年4月25日',region:'nk_missile',ds:'s'},
+  {id:44,level:'warning',zone:'missile',title:'KN-25大口径多連装ロケット発射',country:'北朝鮮',asset:'KN-25 600mm超大型ロケット',location:'平安南道',lat:39.0,lng:126.0,landLat:39.5,landLng:128.0,apogee:50,range:200,datetime:'2025-03-10 07:30',action:'韓国合参が情報収集',detail:'北朝鮮が超大型多連装ロケット砲KN-25を発射。短距離弾道に分類される攻撃力を有し、韓国全土が射程内。',source:'韓国合同参謀本部 2025年3月10日',region:'nk_missile',ds:'s'},
+  {id:48,level:'danger',zone:'missile',title:'多弾頭ICBM試験準備 衛星画像確認',country:'北朝鮮',asset:'火星-19/20系ICBM',location:'東倉里 西海衛星発射場',lat:39.66,lng:124.71,datetime:'2025-11-15 00:00',action:'米韓日が偵察衛星監視',detail:'米偵察衛星が東倉里西海衛星発射場で多弾頭ICBM試験準備の動きを確認。固体燃料エンジン9回目試験成功後、年内発射の可能性高い。',source:'米国防総省 2025年11月15日',region:'nk_missile',ds:'s'},
+  // ── 尖閣・中国海警 追加 ──
+  {id:27,level:'warning',zone:'sea',title:'尖閣接続水域 連続44日航行',country:'中国',asset:'海警局船',location:'尖閣諸島接続水域',lat:25.74,lng:123.5,datetime:'2025-01-02 08:00',action:'第11管区海上保安本部が監視',detail:'年初時点で中国海警船による尖閣諸島接続水域への航行が44日連続を記録。',source:'第11管区海上保安本部 2025年1月2日',region:'japan',ds:'s'},
+  {id:28,level:'warning',zone:'sea',title:'尖閣接続水域 連続314日（最長更新）',country:'中国',asset:'海警局船',location:'尖閣諸島接続水域',lat:25.74,lng:123.5,datetime:'2025-09-28 09:00',action:'外務省が在京中国大使館に抗議',detail:'中国海警船による尖閣諸島接続水域への連続入域が314日を記録、2012年国有化以降の最長記録を再更新。',source:'第11管区海上保安本部・外務省 2025年9月28日',region:'japan',ds:'s'},
+  {id:49,level:'danger',zone:'sea',title:'尖閣諸島 中国海警武装船領海侵入',country:'中国',asset:'海警局艦4隻 (機関砲搭載)',location:'尖閣諸島魚釣島周辺',lat:25.74,lng:123.47,datetime:'2025-11-26 09:30',action:'海上保安庁巡視船警告退去要求',detail:'機関砲を搭載した中国海警局所属艦4隻が尖閣諸島魚釣島周辺領海に侵入。約2時間滞留し中国側へ離脱。',source:'第11管区海上保安本部 2025年11月26日',region:'japan',ds:'s'},
+  // ── 中国軍機異常接近 ──
+  {id:29,level:'danger',zone:'air',title:'J-15戦闘機 海自P-3Cに45m異常接近',country:'中国',asset:'J-15戦闘機 (空母山東艦載)',location:'太平洋・空母山東周辺',lat:24.0,lng:135.0,datetime:'2025-06-07 10:30',action:'防衛省「深刻な懸念」と再発防止申入れ',detail:'空母「山東」搭載J-15戦闘機が約40分間、海上自衛隊P-3C哨戒機に異常接近。水平距離約45m・高度差なしで追従。J-15はミサイル装着済み。',source:'防衛省 2025年6月7日',region:'japan',ds:'s'},
+  {id:30,level:'danger',zone:'air',title:'J-15戦闘機 P-3C前方900m横切り',country:'中国',asset:'J-15戦闘機 (空母山東艦載)',location:'太平洋・空母山東周辺',lat:24.0,lng:135.0,datetime:'2025-06-08 14:30',action:'防衛省抗議',detail:'前日に続きJ-15戦闘機が海自P-3Cの前方約900m（数秒で到達する距離）を横切る挑発行為。2日連続の異常接近で偶発衝突誘発の懸念。',source:'防衛省 2025年6月8日',region:'japan',ds:'s'},
+  {id:31,level:'warning',zone:'air',title:'中国軍機 空自機に異常接近',country:'中国',asset:'中国軍戦闘機',location:'東シナ海',lat:30.0,lng:127.0,datetime:'2025-07-10 11:00',action:'防衛省が抗議',detail:'東シナ海上空で中国軍機が航空自衛隊機に異常接近。挑発的な飛行が継続。',source:'防衛省 2025年7月10日',region:'japan',ds:'s'},
+  // ── 台湾大規模演習 ──
+  {id:32,level:'danger',zone:'air',title:'PLA未発表演習 32機・22機中間線越え',country:'中国',asset:'PLA戦闘機・艦艇',location:'高雄・屏東沖',lat:22.5,lng:120.3,datetime:'2025-02-26 06:00',action:'台湾国防部が緊急発進',detail:'人民解放軍海軍が高雄・屏東沖で予告なし演習を実施。32機の戦闘機が出動、うち22機が台湾海峡中間線を越境。',source:'台湾国防部 2025年2月26日',region:'taiwan',ds:'s'},
+  {id:33,level:'danger',zone:'air',title:'海峡雷霆-2025A大規模演習',country:'中国',asset:'PLA陸海空火箭軍 統合 76機',location:'馬祖列島・台湾本島周辺',lat:25.2,lng:120.0,datetime:'2025-04-01 06:00',action:'台湾国防部が全軍警戒態勢',detail:'人民解放軍東部戦区が「海峡雷霆-2025A」演習を24時間にわたり実施。陸海空火箭軍合同で76機出動、37機が中間線越え。馬祖列島と台湾本島近海で展開。',source:'台湾国防部 2025年4月1日',region:'taiwan',ds:'s'},
+  {id:34,level:'danger',zone:'air',title:'Justice Mission-2025 大規模封鎖演習',country:'中国',asset:'PLA 130機+軍艦14隻+海警15隻',location:'台湾全周',lat:24.0,lng:121.0,datetime:'2025-12-29 06:00',action:'台湾全軍が即応態勢',detail:'人民解放軍が台湾包囲「Justice Mission-2025」を実施。130機超のPLA機がADIZ侵入、軍艦14隻+海警15隻が封鎖訓練。35機が中間線越え。台湾領海内に演習区域を設定。',source:'台湾国防部 2025年12月29日',region:'taiwan',ds:'s'},
+  {id:41,level:'warning',zone:'air',title:'PLA早期警戒機KJ-500 ADIZ侵入',country:'中国',asset:'KJ-500早期警戒機・J-16戦闘機',location:'台湾ADIZ西南部',lat:22.0,lng:119.0,datetime:'2025-03-18 09:00',action:'台湾空軍F-16スクランブル',detail:'KJ-500早期警戒機を中心とする編隊が台湾ADIZ西南部に侵入。中間線越境8機を含む計24機の侵入を確認。',source:'台湾国防部 2025年3月18日',region:'taiwan',ds:'s'},
+  {id:42,level:'danger',zone:'sea',title:'PLA海軍 演習区域を台湾領海内設定',country:'中国',asset:'PLA海軍艦艇14隻',location:'台湾本島周辺領海',lat:24.0,lng:121.5,datetime:'2025-12-30 06:00',action:'台湾政府が「一方的挑発」と非難',detail:'人民解放軍が台湾本島周辺の領海内に複数の演習区域を一方的に設定し実弾演習を実施。台湾政府が国際法違反と強く非難。',source:'台湾総統府・国防部 2025年12月30日',region:'taiwan',ds:'s'},
+  // ── フィリピン 追加 ──
+  {id:35,level:'warning',zone:'sea',title:'スカボロー礁 中国海警・PLA艦船衝突',country:'中国',asset:'中国海警船・PLA海軍艦',location:'スカボロー礁付近',lat:15.18,lng:117.78,datetime:'2025-08-11 13:30',action:'フィリピン沿岸警備隊が冷静対応',detail:'フィリピン沿岸警備隊艦艇を追跡中の中国海警船とPLA海軍軍艦が相互衝突。中国海警船は航行不能の重大損傷。中国側の挑発行為が同士討ちを招く異例の事態。',source:'フィリピン沿岸警備隊 2025年8月11日',region:'philippines',ds:'s'},
+  // ── ロシア 追加 ──
+  {id:36,level:'info',zone:'air',title:'対露スクランブル 年間237回 (2024年度)',country:'ロシア',asset:'戦闘機・爆撃機・哨戒機',location:'日本周辺空域 全域',lat:43.0,lng:140.0,datetime:'2025-04-15 09:00',action:'JASDF全方面隊が継続警戒',detail:'2024年4月〜2025年3月の対ロシア機緊急発進が237回。Tu-95・Tu-142・Su-35・IL-38等多機種が日本ADIZに接近。',source:'統合幕僚監部 2025年4月15日',region:'japan',ds:'s'},
+  {id:37,level:'warning',zone:'air',title:'ロシアIL-38哨戒機 樺太〜北海道',country:'ロシア',asset:'IL-38哨戒機',location:'日本海・北海道東岸',lat:42.5,lng:140.5,datetime:'2025-01-30 14:00',action:'JASDFスクランブル',detail:'ロシア海軍IL-38哨戒機が樺太西岸を哨戒後、北海道東岸沿いに南下し本州北東岸を経由してロシア本土へ帰投。Tu-95と同日の連携飛行。',source:'統合幕僚監部 2025年1月30日',region:'japan',ds:'s'},
+  {id:38,level:'danger',zone:'air',title:'中露共同 8時間爆撃機合同飛行',country:'中国・ロシア',asset:'Tu-95×2 + H-6×2 + 護衛機',location:'日本海・宮古海峡・東シナ海',lat:30.0,lng:128.0,datetime:'2025-12-10 09:00',action:'JASDF・ROKAF同時スクランブル',detail:'中露共同爆撃機編隊8時間にわたる合同飛行。日韓ADIZを順次侵入し示威行動。F-15戦闘機による継続的な対応。',source:'統合幕僚監部 2025年12月10日',region:'japan',ds:'s'},
+  // ── 中国 一般 追加 ──
+  {id:39,level:'info',zone:'air',title:'中国無人機 対日緊急発進 過去最多',country:'中国',asset:'WZ-7・BZK-005等 偵察無人機',location:'尖閣・宮古海峡周辺',lat:24.5,lng:125.0,datetime:'2025-04-10 10:00',action:'JASDFが対無人機戦術検討',detail:'2024年度の中国無人機による対日活動が23回の緊急発進を要求、過去最多を記録。WZ-7偵察機、BZK-005無人機等。',source:'統合幕僚監部 2025年4月10日',region:'japan',ds:'s'},
+  {id:40,level:'warning',zone:'sea',title:'中国海警 与那国南方パトロール強化',country:'中国',asset:'海警局艦5隻',location:'与那国島南方',lat:24.0,lng:123.0,datetime:'2025-08-22 11:00',action:'第11管区海保が継続監視',detail:'中国海警局所属艦艇5隻が与那国島南方海域で活動を強化、台湾海峡有事を念頭に置いた行動と分析。',source:'第11管区海上保安本部 2025年8月22日',region:'japan',ds:'s'},
+  {id:45,level:'warning',zone:'sea',title:'空母山東 沖縄宮古島南方訓練',country:'中国',asset:'空母 山東 + 護衛艦4隻',location:'宮古島南方海域',lat:23.5,lng:125.0,datetime:'2025-05-30 12:00',action:'海自護衛艦・哨戒機が継続監視',detail:'中国空母「山東」を中核とする戦闘群が宮古島南方で艦載機発着艦訓練を実施。J-15戦闘機が複数回発艦。',source:'防衛省 2025年5月30日',region:'japan',ds:'s'},
+  {id:46,level:'info',zone:'eez',title:'中国海洋調査船 沖縄トラフ越境',country:'中国',asset:'海洋調査船「向陽紅」',location:'東シナ海・沖縄トラフ',lat:27.5,lng:127.0,datetime:'2025-07-25 14:00',action:'外務省が抗議',detail:'中国の海洋調査船が日中中間線を越え日本側EEZで無許可調査活動。沖縄トラフ周辺で長期間滞留。',source:'外務省・海上保安庁 2025年7月25日',region:'japan',ds:'s'},
+  // ── ベトナム 追加 ──
+  {id:47,level:'warning',zone:'sea',title:'西沙諸島 中国海警ベトナム漁船排除',country:'中国',asset:'海警局艦3隻',location:'西沙諸島周辺',lat:16.5,lng:112.0,datetime:'2025-06-15 09:00',action:'ベトナム外務省抗議',detail:'中国海警船3隻がベトナム漁船を西沙諸島周辺から強制排除、漁具没収。ベトナム外務省が中国大使館に抗議。',source:'ベトナム外務省 2025年6月15日',region:'vietnam',ds:'s'},
+  // ── 統計 追加 ──
+  {id:50,level:'info',zone:'air',title:'対中国機緊急発進 全体の約66%',country:'中国',asset:'戦闘機・爆撃機・無人機',location:'日本周辺空域 全域',lat:34.0,lng:139.0,datetime:'2026-04-10 14:00',action:'JASDFが体制強化検討',detail:'2025年度の対中国機緊急発進が全体の約66%を占め、年間393回。中国機が緊急発進対象の主体を占める。',source:'統合幕僚監部 2026年4月10日',region:'japan',ds:'s'},
+  {id:51,level:'info',zone:'missile',title:'対北朝鮮 弾道ミサイル発射 年5回確認',country:'北朝鮮',asset:'各種弾道・巡航ミサイル',location:'北朝鮮全域',lat:39.0,lng:126.0,datetime:'2025-12-31 23:59',action:'防衛省が脅威評価',detail:'2025年中の北朝鮮による弾道ミサイル発射は5回（火星-16、SRBM、KN-23、KN-25等）。新型多弾頭ICBMの開発進展。',source:'防衛省 2025年12月31日',region:'nk_missile',ds:'s'},
+  {id:52,level:'warning',zone:'sea',title:'尖閣周辺 中国船航行 年間355日',country:'中国',asset:'海警局船',location:'尖閣諸島周辺',lat:25.74,lng:123.5,datetime:'2025-12-31 23:59',action:'政府が継続警戒',detail:'2025年は中国船による尖閣諸島周辺航行が年間355日に達し、国有化後の年間最多を更新。常態化が深刻。',source:'海上保安庁 2025年12月31日',region:'japan',ds:'s'},
 ];
 
 // ══════════════════════════ LEAFLET MAP ══════════════════════════
@@ -505,11 +553,36 @@ function initMap(){
     maxZoom: 7,
     worldCopyJump: true,
   });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
     subdomains: 'abcd',
     attribution: '© OpenStreetMap, © CARTO',
     maxZoom: 19,
   }).addTo(_map);
+
+  // 国名ラベル（県・州レベルは表示しない）
+  const COUNTRIES = [
+    {name:'日本', lat:36.5, lng:138.2},
+    {name:'韓国', lat:36.5, lng:127.7},
+    {name:'北朝鮮', lat:40.0, lng:127.0},
+    {name:'中国', lat:35.0, lng:108.0},
+    {name:'台湾', lat:23.7, lng:121.0},
+    {name:'ロシア', lat:51.0, lng:135.0},
+    {name:'フィリピン', lat:12.5, lng:122.0},
+    {name:'ベトナム', lat:16.0, lng:107.0},
+    {name:'タイ', lat:15.5, lng:100.5},
+    {name:'カンボジア', lat:12.5, lng:105.0},
+    {name:'ラオス', lat:18.5, lng:103.5},
+    {name:'ミャンマー', lat:21.0, lng:96.5},
+    {name:'マレーシア', lat:4.0, lng:102.0},
+    {name:'インドネシア', lat:-1.5, lng:114.0},
+    {name:'ブルネイ', lat:4.5, lng:114.7},
+    {name:'モンゴル', lat:46.5, lng:104.0},
+    {name:'インド', lat:22.0, lng:79.0},
+  ];
+  COUNTRIES.forEach(c => {
+    const icon = L.divIcon({className:'country-label', html:c.name, iconSize:[80,16], iconAnchor:[40,8]});
+    L.marker([c.lat, c.lng], {icon, interactive:false, keyboard:false}).addTo(_map);
+  });
 
   // Static overlays — convert [lng,lat] → [lat,lng]
   L.polyline(EEZ.map(p=>[p[1],p[0]]), {color:'#2f81f7', weight:1.3, dashArray:'4,3', opacity:0.55, smoothFactor:0.3, interactive:false}).addTo(_map);
@@ -522,8 +595,8 @@ function initMap(){
     hit.bindTooltip(tipHTML, {sticky:true});
     hit.on('click', e => { L.DomEvent.stopPropagation(e); showLineInfo(`九段線 ${seg.n}/9`, seg.loc, mid, '#f85149'); });
     hit.getElement() && (hit.getElement().style.cursor='pointer');
-    // 視認用の細い実線（非インタラクティブ）
-    L.polyline(latlngs, {color:'#f85149', weight:3, opacity:0.75, lineCap:'round', interactive:false}).addTo(_map);
+    // 視認用の点線（非インタラクティブ）
+    L.polyline(latlngs, {color:'#f85149', weight:3, opacity:0.85, dashArray:'2,4', lineCap:'round', interactive:false}).addTo(_map);
   });
   L.polyline(TAIWAN_STRAIT_LINE.map(p=>[p[1],p[0]]), {color:'#d29922', weight:1.3, dashArray:'3,3', opacity:0.7, smoothFactor:0.3, interactive:false}).addTo(_map);
 
@@ -611,7 +684,7 @@ let curLang = 'ja';
 
 const I18N = {
   ja: {
-    stat_label:'脅威レベル統計', stat_violation:'侵犯', stat_caution:'警戒', stat_info:'情報',
+    stat_label:'脅威レベル統計', chart_label:'脅威レベル推移', stat_violation:'侵犯', stat_caution:'警戒', stat_info:'情報',
     filter_type:'フィルター — タイプ', filter_region:'フィルター — 侵犯勢力', filter_time:'フィルター — 期間',
     f_all:'全て', f_violation:'侵犯', f_caution:'警戒', f_info:'情報', f_air:'領空', f_sea:'領海',
     t_1d:'直近1日', t_7d:'1週間', t_30d:'1ヶ月', t_180d:'半年', t_365d:'1年', t_all:'全期間',
@@ -646,10 +719,10 @@ const I18N = {
     modal_title:'API設定', modal_sub:'リアルタイム情報取得のためのAPIキーを設定してください。<br>⚠️ キーはブラウザのlocalStorageに平文保存されます。共有/公開端末では使用しないでください。本番運用時はサーバープロキシ経由を推奨。',
     modal_ak_label:'ANTHROPIC API KEY', modal_ak_hint:'Claude Haiku + web_searchで統幕・NHK等を検索します。',
     modal_ck_label:'CURRENTS API KEY', modal_ck_hint:'ニュース補完（任意）。',
-    modal_start:'▶ 設定して開始', modal_demo:'デモ表示',
+    modal_start:'▶ 設定して開始', modal_demo:'デモ表示', modal_proxy:'🌐 サーバープロキシ経由（キー不要・推奨）',
   },
   en: {
-    stat_label:'Threat Level Stats', stat_violation:'Violation', stat_caution:'Caution', stat_info:'Info',
+    stat_label:'Threat Level Stats', chart_label:'Threat Trend', stat_violation:'Violation', stat_caution:'Caution', stat_info:'Info',
     filter_type:'Filter — Type', filter_region:'Filter — Aggressor', filter_time:'Filter — Period',
     f_all:'All', f_violation:'Violation', f_caution:'Warning', f_info:'Info', f_air:'Airspace', f_sea:'Territorial Sea',
     t_1d:'Last 24h', t_7d:'1 Week', t_30d:'1 Month', t_180d:'6 Months', t_365d:'1 Year', t_all:'All Time',
@@ -684,10 +757,10 @@ const I18N = {
     modal_title:'API Settings', modal_sub:'Configure API keys for real-time data.<br>⚠️ Keys are saved as plaintext in browser localStorage. Do NOT use on shared/public devices. Use a server-side proxy for production.',
     modal_ak_label:'ANTHROPIC API KEY', modal_ak_hint:'Claude Haiku + web_search queries MoD, NHK, etc.',
     modal_ck_label:'CURRENTS API KEY', modal_ck_hint:'News supplement (optional).',
-    modal_start:'▶ Start', modal_demo:'Demo Mode',
+    modal_start:'▶ Start', modal_demo:'Demo Mode', modal_proxy:'🌐 Use server proxy (no key, recommended)',
   },
   zh: {
-    stat_label:'威脅等級統計', stat_violation:'侵犯', stat_caution:'警戒', stat_info:'資訊',
+    stat_label:'威脅等級統計', chart_label:'威脅趨勢', stat_violation:'侵犯', stat_caution:'警戒', stat_info:'資訊',
     filter_type:'篩選 — 類型', filter_region:'篩選 — 地區', filter_time:'篩選 — 期間',
     f_all:'全部', f_violation:'侵犯', f_caution:'警戒', f_info:'資訊', f_air:'領空', f_sea:'領海',
     t_1d:'最近1天', t_7d:'1週', t_30d:'1個月', t_180d:'半年', t_365d:'1年', t_all:'全部期間',
@@ -722,10 +795,10 @@ const I18N = {
     modal_title:'API 設定', modal_sub:'請設定 API 金鑰以取得即時資料。<br>金鑰儲存於瀏覽器的 localStorage。',
     modal_ak_label:'ANTHROPIC API KEY', modal_ak_hint:'Claude Haiku + web_search 搜尋國防部等來源。',
     modal_ck_label:'CURRENTS API KEY', modal_ck_hint:'新聞補充（可選）。',
-    modal_start:'▶ 開始', modal_demo:'示範模式',
+    modal_start:'▶ 開始', modal_demo:'示範模式', modal_proxy:'🌐 使用伺服器代理（無需金鑰，推薦）',
   },
   fil: {
-    stat_label:'Antas ng Banta', stat_violation:'Paglabag', stat_caution:'Babala', stat_info:'Impormasyon',
+    stat_label:'Antas ng Banta', chart_label:'Trend ng Banta', stat_violation:'Paglabag', stat_caution:'Babala', stat_info:'Impormasyon',
     filter_type:'Filter — Uri', filter_region:'Filter — Rehiyon', filter_time:'Filter — Panahon',
     f_all:'Lahat', f_violation:'Paglabag', f_caution:'Babala', f_info:'Impormasyon', f_air:'Airspace', f_sea:'Teritoryal na Dagat',
     t_1d:'Huling 24h', t_7d:'1 Linggo', t_30d:'1 Buwan', t_180d:'6 Buwan', t_365d:'1 Taon', t_all:'Lahat ng Oras',
@@ -760,10 +833,10 @@ const I18N = {
     modal_title:'Mga Setting ng API', modal_sub:'I-configure ang mga API key para sa real-time na data.<br>Naka-save ang mga key sa localStorage ng browser.',
     modal_ak_label:'ANTHROPIC API KEY', modal_ak_hint:'Naghahanap sa MoD, balita, atbp. gamit ang Claude Haiku.',
     modal_ck_label:'CURRENTS API KEY', modal_ck_hint:'Karagdagang balita (opsyonal).',
-    modal_start:'▶ Magsimula', modal_demo:'Mode ng Demo',
+    modal_start:'▶ Magsimula', modal_demo:'Mode ng Demo', modal_proxy:'🌐 Gamitin ang server proxy (walang key)',
   },
   vi: {
-    stat_label:'Thống Kê Mức Đe Dọa', stat_violation:'Vi Phạm', stat_caution:'Cảnh Báo', stat_info:'Thông Tin',
+    stat_label:'Thống Kê Mức Đe Dọa', chart_label:'Xu Hướng', stat_violation:'Vi Phạm', stat_caution:'Cảnh Báo', stat_info:'Thông Tin',
     filter_type:'Lọc — Loại', filter_region:'Lọc — Khu Vực', filter_time:'Lọc — Thời Gian',
     f_all:'Tất Cả', f_violation:'Vi Phạm', f_caution:'Cảnh Báo', f_info:'Thông Tin', f_air:'Vùng Trời', f_sea:'Lãnh Hải',
     t_1d:'24h Qua', t_7d:'1 Tuần', t_30d:'1 Tháng', t_180d:'6 Tháng', t_365d:'1 Năm', t_all:'Tất Cả',
@@ -798,7 +871,7 @@ const I18N = {
     modal_title:'Cài Đặt API', modal_sub:'Cấu hình API key để lấy dữ liệu thời gian thực.<br>Key được lưu trong localStorage của trình duyệt.',
     modal_ak_label:'ANTHROPIC API KEY', modal_ak_hint:'Claude Haiku + web_search tìm kiếm Bộ Quốc phòng, v.v.',
     modal_ck_label:'CURRENTS API KEY', modal_ck_hint:'Bổ sung tin tức (tùy chọn).',
-    modal_start:'▶ Bắt Đầu', modal_demo:'Chế Độ Demo',
+    modal_start:'▶ Bắt Đầu', modal_demo:'Chế Độ Demo', modal_proxy:'🌐 Dùng proxy máy chủ (không cần key)',
   },
 };
 
@@ -879,13 +952,67 @@ function saveKeys(){
   isDemo=false; closeModal(); loadDemo(); fetchAll();
 }
 function skipKeys(){isDemo=true;closeModal();loadDemo();setStatus('',t('status_demo'));document.getElementById('lupd').textContent=t('lupd_demo');startCnt();}
+function useProxy(){
+  apiKeys={anthropic:'proxy',currents:''};
+  localStorage.setItem('jadm_ak','proxy'); localStorage.setItem('jadm_ck','');
+  isDemo=false; closeModal(); loadDemo(); fetchAll();
+}
 function openSettings(){document.getElementById('apiModal').style.display='flex';}
 function closeModal(){document.getElementById('apiModal').style.display='none';}
 
 // ══════════════════════════ FETCH ══════════════════════════
-async function fetchAll(){
+// 同時実行ガード
+let _fetching = false;
+const CACHE_KEY = 'jadm_cache_v1';
+const CACHE_TTL_MS = 24*3600*1000; // 24h
+
+// 重複排除キー: 日付(yyyy-mm-dd) + 国 + 場所
+function incKey(inc){
+  return [(inc.datetime||'').slice(0,10), inc.country||'', inc.location||''].join('|').toLowerCase();
+}
+
+function dedupIncidents(arr){
+  const seen=new Set(); const out=[];
+  for(const inc of arr){
+    const k=incKey(inc);
+    if(!k.replace(/\|/g,'').trim())continue; // 空キーはスキップ
+    if(seen.has(k))continue;
+    seen.add(k); out.push(inc);
+  }
+  return out;
+}
+
+function loadCache(){
+  try{
+    const raw=localStorage.getItem(CACHE_KEY);
+    if(!raw)return null;
+    const obj=JSON.parse(raw);
+    if(!obj.ts||!Array.isArray(obj.data))return null;
+    if(Date.now()-obj.ts>CACHE_TTL_MS)return null; // 期限切れ
+    return obj;
+  }catch{return null;}
+}
+function saveCache(data){
+  try{localStorage.setItem(CACHE_KEY,JSON.stringify({ts:Date.now(),data,ids:data.map(i=>incKey(i))}));}catch{}
+}
+
+async function fetchAll(forceRefresh=false){
   if(isDemo)return;
   if(!apiKeys.anthropic){openSettings();return;}
+  if(_fetching)return;  // 同時実行防止
+  _fetching=true;
+  // 24hキャッシュチェック
+  if(!forceRefresh){
+    const cached=loadCache();
+    if(cached){
+      mergeIncidents(cached.data, cached.ids||[]);
+      setStatus('',t('status_live'));
+      document.getElementById('lupd').textContent=t('lupd_prefix')+fmtTime(new Date(cached.ts))+' (cache)';
+      countdown=Math.max(60,(cached.ts+CACHE_TTL_MS-Date.now())/1000|0); startCnt();
+      _fetching=false;
+      return;
+    }
+  }
   showLoading(t('loading_main'));
   setStatus('loading',t('status_updating'));
   document.getElementById('refBtn').disabled=true;
@@ -894,16 +1021,34 @@ async function fetchAll(){
     const cd=await fetchClaude();
     let nd=[];
     if(apiKeys.currents){setStep(t('loading_currents'));nd=await fetchCurrents();}
-    incidents=[...cd.map(x=>({...x,isNew:true})),...nd.map(x=>({...x,isNew:true})),...DEMO];
-    renderAll(); updateTicker(); setStatus('',t('status_live'));
+    const merged=dedupIncidents([...cd, ...nd]);
+    saveCache(merged);
+    const prevIds=new Set((loadCache()?.ids)||[]);
+    mergeIncidents(merged, [...prevIds]);
+    setStatus('',t('status_live'));
     document.getElementById('lupd').textContent=t('lupd_prefix')+fmtTime(new Date());
     countdown=43200; startCnt();
   }catch(err){
     console.error(err); setStatus('error',t('status_error'));
     if(!incidents.length)loadDemo();
     alert(t('alert_fetch_fail')+err.message);
-  }finally{hideLoading();document.getElementById('refBtn').disabled=false;}
+  }finally{hideLoading();document.getElementById('refBtn').disabled=false;_fetching=false;}
 }
+
+// 取得結果をDEMOとマージし、前回未掲載のものだけNEWバッジ
+function mergeIncidents(fetched, prevKeys){
+  const prev=new Set(prevKeys||[]);
+  const live=fetched.map(x=>{
+    const k=incKey(x);
+    return {...x, isNew: !prev.has(k)};
+  });
+  // DEMOとマージ後にもう一度dedup（API取得結果がDEMOと被るケースを排除）
+  incidents=dedupIncidents([...live, ...DEMO]);
+  renderAll(); updateTicker();
+}
+
+// プロキシモード判定: APIキーが "proxy" の場合は /api/claude 経由（Cloudflare Pages Functions）
+function isProxyMode(){return apiKeys.anthropic==='proxy';}
 
 async function fetchClaude(){
   const prompt=`以下の地域における軍事的挑発・侵犯・接近情報を直近6ヶ月で検索してください：
@@ -917,23 +1062,23 @@ async function fetchClaude(){
 結果をJSON配列のみで返してください（他のテキスト不要）：
 [{"id":1,"level":"danger|warning|info","zone":"air|sea|eez|missile","title":"案件種別","country":"侵犯国","asset":"機体・船舶・ミサイル名","location":"場所・発射地","lat":発射地緯度,"lng":発射地経度,"landLat":落下推定緯度または0,"landLng":落下推定経度または0,"apogee":最高高度km整数または0,"range":飛翔距離km整数または0,"datetime":"YYYY-MM-DD HH:MM","action":"対応","detail":"詳細","source":"出典","region":"japan|taiwan|philippines|vietnam|nk_missile","ds":"claude"}]
 level: danger=実際の侵犯・発射, warning=接近・準備・妨害, info=EEZ・調査・その他
-ミサイルは zone=missile、landLat/landLng/apogee/rangeを必ず含める。最新15件程度。データなければ[]。`;
-  const res=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'x-api-key': apiKeys.anthropic,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body:JSON.stringify({
-      model:'claude-haiku-4-5-20251001',
-      max_tokens:4000,
-      system: SYSTEM_PROMPT,
-      tools:[{type:'web_search_20250305',name:'web_search'}],
-      messages:[{role:'user',content:prompt}]
-    })
+ミサイルは zone=missile、landLat/landLng/apogee/rangeを必ず含める。最新20件程度。データなければ[]。`;
+  const body=JSON.stringify({
+    model:'claude-sonnet-4-6',
+    max_tokens:8000,
+    system: SYSTEM_PROMPT,
+    tools:[{type:'web_search_20250305',name:'web_search'}],
+    messages:[{role:'user',content:prompt}]
   });
+  const proxy=isProxyMode();
+  const url=proxy?'/api/claude':'https://api.anthropic.com/v1/messages';
+  const headers=proxy?{'Content-Type':'application/json'}:{
+    'Content-Type':'application/json',
+    'x-api-key': apiKeys.anthropic,
+    'anthropic-version': '2023-06-01',
+    'anthropic-dangerous-direct-browser-access': 'true'
+  };
+  const res=await fetch(url,{method:'POST',headers,body});
   if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`Claude API ${res.status}: ${e.error?.message||'Unknown'}`);}
   const data=await res.json();
   const txt=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
@@ -1009,7 +1154,96 @@ function filterByTime(range){
   updateTimeUI();
 }
 
-function renderAll(){renderStats();renderList();renderMap();updateTimeUI();}
+function renderAll(){renderStats();renderList();renderMap();renderChart();updateTimeUI();}
+
+function renderChart(){
+  const el=document.getElementById('chartArea');
+  if(!el)return;
+  const range=curTimeRange;
+  const now=new Date();
+  // bin config: count=number of bins, fmt=label formatter
+  const cfg={
+    '1d':  {count:6, ms:4*3600*1000, fmt:d=>String(d.getHours()).padStart(2,'0')+'h'},
+    '7d':  {count:7, ms:86400*1000, fmt:d=>(d.getMonth()+1)+'/'+d.getDate()},
+    '30d': {count:10, ms:3*86400*1000, fmt:d=>(d.getMonth()+1)+'/'+d.getDate()},
+    '180d':{count:12, ms:15*86400*1000, fmt:d=>(d.getMonth()+1)+'/'+d.getDate()},
+    '365d':{count:12, ms:30*86400*1000, fmt:d=>(d.getMonth()+1)+'月'},
+    'all': {count:12, ms:30*86400*1000, fmt:d=>(d.getMonth()+1)+'月'},
+  }[range]||{count:10, ms:86400*1000, fmt:d=>(d.getMonth()+1)+'/'+d.getDate()};
+
+  // Determine window
+  let endMs=now.getTime();
+  let startMs;
+  if(range==='all'){
+    const dates=incidents.map(i=>parseDate(i.datetime)?.getTime()).filter(Boolean);
+    if(!dates.length){el.innerHTML=`<div class="chart-empty">${t('list_empty')}</div>`;return;}
+    startMs=Math.min(...dates); endMs=Math.max(...dates, now.getTime());
+  } else {
+    const days=TIME_RANGES[range]||30;
+    startMs=now.getTime()-days*86400000;
+  }
+  const span=endMs-startMs;
+  const binSpan=span/cfg.count;
+
+  // Bin incidents（侵犯勢力フィルタ適用、期間はチャート側で扱う）
+  const aggressorMap={china:'中国',russia:'ロシア',nk:'北朝鮮'};
+  const regionMatch=inc=>curRegion==='all'||(inc.country||'').includes(aggressorMap[curRegion]||'__none__');
+  const bins=Array.from({length:cfg.count},(_,i)=>({d:0,w:0,i:0,start:startMs+i*binSpan}));
+  incidents.forEach(inc=>{
+    if(!regionMatch(inc))return;
+    const dt=parseDate(inc.datetime); if(!dt)return;
+    const ts=dt.getTime();
+    if(ts<startMs||ts>endMs)return;
+    const idx=Math.min(cfg.count-1,Math.max(0,Math.floor((ts-startMs)/binSpan)));
+    if(inc.level==='danger')bins[idx].d++;
+    else if(inc.level==='warning')bins[idx].w++;
+    else if(inc.level==='info')bins[idx].i++;
+  });
+  const max=Math.max(1,...bins.map(b=>b.d+b.w+b.i));
+
+  // SVG render
+  const W=300, H=90, top=8, bot=18, plot=H-top-bot;
+  const barW=W/cfg.count;
+  let svg=`<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`;
+  // Grid lines
+  for(let g=1;g<=3;g++){
+    const y=top+plot*(1-g/3);
+    svg+=`<line x1="0" y1="${y}" x2="${W}" y2="${y}" class="chart-grid"/>`;
+  }
+  // Y-axis tick (max value)
+  svg+=`<text x="2" y="${top+5}" class="chart-tick">${max}</text>`;
+
+  // Bars (stacked: danger bottom, warning middle, info top)
+  bins.forEach((b,i)=>{
+    const x=i*barW+1.5;
+    const w=Math.max(2,barW-3);
+    const total=b.d+b.w+b.i;
+    if(total===0)return;
+    let yCursor=top+plot;
+    const dH=(b.d/max)*plot;
+    const wH=(b.w/max)*plot;
+    const iH=(b.i/max)*plot;
+    if(b.d>0){yCursor-=dH;svg+=`<rect x="${x}" y="${yCursor}" width="${w}" height="${dH}" class="chart-bar-d"><title>${escDate(b.start,cfg)}: 侵犯${b.d}</title></rect>`;}
+    if(b.w>0){yCursor-=wH;svg+=`<rect x="${x}" y="${yCursor}" width="${w}" height="${wH}" class="chart-bar-w"><title>${escDate(b.start,cfg)}: 警戒${b.w}</title></rect>`;}
+    if(b.i>0){yCursor-=iH;svg+=`<rect x="${x}" y="${yCursor}" width="${w}" height="${iH}" class="chart-bar-i"><title>${escDate(b.start,cfg)}: 情報${b.i}</title></rect>`;}
+  });
+
+  // X-axis labels (every other bin to avoid overlap)
+  const skip=cfg.count>8?2:1;
+  bins.forEach((b,i)=>{
+    if(i%skip!==0)return;
+    const x=i*barW+barW/2;
+    svg+=`<text x="${x}" y="${H-5}" text-anchor="middle" class="chart-tick">${cfg.fmt(new Date(b.start))}</text>`;
+  });
+
+  svg+=`</svg>`;
+  el.innerHTML=svg;
+}
+
+function escDate(ms,cfg){
+  const d=new Date(ms);
+  return cfg.fmt(d);
+}
 
 function renderStats(){
   const f = filtered();
@@ -1116,12 +1350,13 @@ function showLineInfo(title, loc, midLatLng, color){
 
 // ══════════════════════════ FILTER ══════════════════════════
 function filterBy(f){
-  curFilter=f;
-  document.querySelectorAll('.chip[data-f]').forEach(c=>c.classList.toggle('on',c.dataset.f===f));
+  // 同じレベルを再クリックで解除（'all'に戻す）
+  curFilter = (curFilter===f && f!=='all') ? 'all' : f;
+  document.querySelectorAll('.chip[data-f]').forEach(c=>c.classList.toggle('on',c.dataset.f===curFilter));
   ['d','w','i'].forEach(x=>document.getElementById('sc-'+x).className='sc');
-  if(f==='danger')document.getElementById('sc-d').classList.add('act-d');
-  if(f==='warning')document.getElementById('sc-w').classList.add('act-w');
-  if(f==='info')document.getElementById('sc-i').classList.add('act-i');
+  if(curFilter==='danger')document.getElementById('sc-d').classList.add('act-d');
+  if(curFilter==='warning')document.getElementById('sc-w').classList.add('act-w');
+  if(curFilter==='info')document.getElementById('sc-i').classList.add('act-i');
   renderAll();
 }
 function filterRegion(r){
