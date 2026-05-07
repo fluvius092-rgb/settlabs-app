@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="SettLabs — Webゲーム・アプリ開発サイト" description="SettLabsはブラウザで使える無料WebゲームとAIアプリを開発・公開している個人サイトです。">
+<style>
+  body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 48px 16px 32px; }
+  h1 { font-size: 2rem; letter-spacing: 4px; color: #00c8f0; margin-bottom: 8px; }
+  .tagline { font-size: 0.8rem; color: #4a6070; letter-spacing: 1px; margin-bottom: 40px; }
+  .games { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 900px; }
+  .game-card { display: block; width: 280px; background: #0d1117; border: 1px solid #1a2a3a; border-radius: 12px; text-decoration: none; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+  .game-card:hover { border-color: #00c8f0; transform: translateY(-4px); }
+  .game-card img { width: 100%; height: 160px; object-fit: cover; }
+  .game-card .info { padding: 16px; }
+  .game-card .info h2 { font-size: 1rem; color: #fff; margin-bottom: 8px; }
+  .game-card .info p { font-size: 0.75rem; color: #6a8090; line-height: 1.6; }
+  .game-card .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+  .game-card .tag { font-size: 0.65rem; color: #4a6070; background: #0a0f18; border: 1px solid #1a2a3a; border-radius: 3px; padding: 1px 6px; }
+  .about-section { max-width: 640px; width: 100%; margin-top: 56px; padding-top: 32px; border-top: 1px solid #1a2a3a; }
+  .about-section h2 { font-size: 0.85rem; color: #00c8f0; letter-spacing: 2px; margin-bottom: 16px; }
+  .about-section p { font-size: 0.8rem; color: #6a8090; line-height: 1.85; margin-bottom: 12px; }
+  .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin: 16px 0; }
+  .feature-list li { background: #0d1117; border: 1px solid #1a2a3a; border-radius: 6px; padding: 10px 14px; font-size: 0.75rem; color: #8aa0b0; }
+  .feature-list li strong { display: block; color: #00c8f0; margin-bottom: 3px; font-size: 0.72rem; letter-spacing: 1px; }
+  footer { margin-top: 48px; font-size: 0.7rem; color: #4a6070; text-align: center; }
+  footer nav { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  footer nav a { color: #6a8090; text-decoration: none; }
+  footer nav a:hover { color: #00c8f0; }
+  footer .copyright { margin-top: 10px; font-size: 0.65rem; color: #2a3a48; }
+</style>
+<h1>SETTLABS</h1>
+<p class="tagline">Browser Games &amp; Apps — Free to Use</p>
+<div class="games">
+  <a href="/scp_card_battle/" class="game-card">
+    <img src="/scp_card_battle/og-image.png" alt="SCP Card Battle">
+    <div class="info">
+      <h2>SCP Card Battle</h2>
+      <p>SCP財団をテーマにしたコレクション&カードバトルゲーム。200体以上のSCPカードを集め、デッキを組んでオンライン対戦に挑め。インストール不要・無料プレイ。</p>
+      <div class="tags"><span class="tag">無料</span><span class="tag">カードゲーム</span><span class="tag">オンライン対戦</span><span class="tag">SCP</span><span class="tag">日英対応</span></div>
+    </div>
+  </a>
+  <a href="/contract_reader/" class="game-card">
+    <img src="/contract_reader/og-image.png" alt="契約書かんたん読み">
+    <div class="info">
+      <h2>契約書かんたん読み</h2>
+      <p>契約書・利用規約をAIがわかりやすく解説。PDFや画像をアップロードするだけで、難しい法律用語をやさしい言葉に翻訳。注意すべき条項も自動で抽出。</p>
+      <div class="tags"><span class="tag">無料</span><span class="tag">AI解析</span><span class="tag">契約書</span><span class="tag">PDF対応</span><span class="tag">Android対応</span></div>
+    </div>
+  </a>
+</div>
+<div class="about-section">
+  <h2>ABOUT SETTLABS</h2>
+  <p>SettLabsは、ブラウザで手軽に遊べるWebゲームを開発・公開している個人運営サイトです。PCでもスマートフォンでもインストール不要でそのまま遊べる無料ゲームを提供しています。</p>
+  <ul class="feature-list">
+    <li><strong>200+ CARDS</strong>SCP-001からSCP-6500まで多数のSCPカードを収録</li>
+    <li><strong>ONLINE BATTLE</strong>リアルタイムのオンライン1対1対戦</li>
+    <li><strong>DECK BUILDING</strong>コスト制限付きの戦略的なデッキ構築</li>
+    <li><strong>RANKING</strong>シーズン制のランキングで実力を競う</li>
+    <li><strong>FREE TO PLAY</strong>完全無料・アカウント登録不要</li>
+    <li><strong>JP / EN</strong>日本語・英語の2言語対応</li>
+  </ul>
+</div>
+<footer>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/privacy.html">Privacy Policy</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/blog/">Blog</a>
+    <a href="/scp_card_battle/guide.html">遊び方ガイド</a>
+  </nav>
+  <p class="copyright">&copy; 2026 SettLabs</p>
+</footer>
+</Base>
