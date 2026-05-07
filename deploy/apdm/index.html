@@ -31,7 +31,7 @@
   --mono:        'DM Mono', monospace;
   --sans:        'DM Sans', sans-serif;
   --display:     'Syne', sans-serif;
-  --hh:          56px;
+  --hh:          42px;
   --pw:          300px;
   --dw:          280px;
   --th:          34px;
@@ -64,15 +64,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 
 /* LEFT PANEL */
 .pl{width:var(--pw);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-.ps{padding:12px 14px;border-bottom:1px solid var(--border-light);}
-.sl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px;}
+.ps{padding:6px 12px;border-bottom:1px solid var(--border-light);}
+.sl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:5px;}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-.sc{background:var(--bg);border:1px solid var(--border-light);border-radius:var(--r);padding:9px;text-align:center;cursor:pointer;transition:all .15s;}
+.sc{background:var(--bg);border:1px solid var(--border-light);border-radius:var(--r);padding:4px 6px;text-align:center;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
 .sc:hover{border-color:var(--accent);}
 .sc.act-d{border-color:var(--danger);background:var(--danger-glow);}
 .sc.act-w{border-color:var(--warning);background:var(--warning-glow);}
 .sc.act-i{border-color:var(--accent);background:var(--accent-glow);}
-.sn{font-family:var(--display);font-size:26px;font-weight:700;line-height:1;margin-bottom:2px;}
+.sn{font-family:var(--display);font-size:18px;font-weight:700;line-height:1;}
 .sn.d{color:var(--danger);} .sn.w{color:var(--warning);} .sn.i{color:var(--accent);}
 .sk{font-size:10px;color:var(--text-muted);}
 .chips{display:flex;flex-wrap:wrap;gap:4px;}
@@ -142,14 +142,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .dtab .badge{display:inline-block;font-size:9px;background:rgba(255,255,255,0.2);padding:0 4px;border-radius:2px;margin-left:4px;}
 .dcl{width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;flex-shrink:0;}
 .dcl:hover{background:var(--surface2);color:var(--danger);border-color:var(--danger);}
-.db{flex:1;overflow-y:auto;padding:10px 12px;}
+.db{flex:1;overflow-y:auto;padding:8px 12px;}
 .dl{flex:1;overflow-y:auto;padding:6px;display:none;}
 .dl.on{display:block;}
 .db.off{display:none;}
 .de{display:flex;flex-direction:column;align-items:center;justify-content:center;height:160px;gap:8px;}
 .dei{font-size:26px;opacity:.15;}
 .det{font-size:11px;color:var(--text-dim);text-align:center;line-height:1.7;}
-.df{margin-bottom:6px;}
+.df{margin-bottom:4px;}
 .df:last-child{margin-bottom:0;}
 .df.h{display:flex;align-items:baseline;gap:10px;}
 .df.h .dk{margin-bottom:0;flex-shrink:0;min-width:88px;}
@@ -163,7 +163,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .ltag.d{color:var(--danger);border-color:var(--danger);background:var(--danger-glow);}
 .ltag.w{color:var(--warning);border-color:var(--warning);background:var(--warning-glow);}
 .ltag.i{color:var(--accent);border-color:var(--accent);background:var(--accent-glow);}
-.ddiv{border:none;border-top:1px solid var(--border-light);margin:6px 0;}
+.ddiv{border:none;border-top:1px solid var(--border-light);margin:4px 0;}
 .slog{border-top:1px solid var(--border-light);padding:10px 14px;max-height:130px;overflow-y:auto;}
 .se{font-family:var(--mono);font-size:9px;color:var(--text-dim);line-height:2;display:flex;align-items:center;gap:5px;}
 .se::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0;opacity:.4;}
@@ -219,14 +219,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .lang-btn.on{background:var(--accent);color:#fff;}
 
 /* TIME FILTER */
-.time-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px;}
-.time-seg2{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
-.tseg{font-family:var(--mono);font-size:9px;padding:5px 4px;border:1px solid var(--border);border-radius:var(--r);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.3px;line-height:1.3;}
+.time-seg{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;}
+.time-seg2{display:none;}
+.tseg{font-family:var(--mono);font-size:9px;padding:3px 2px;border:1px solid var(--border);border-radius:var(--r);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.2px;line-height:1.2;}
 .tseg:hover{border-color:var(--accent);color:var(--accent);}
 .tseg.on{border-color:var(--accent);color:#fff;background:var(--accent);}
 .tseg.on.realtime{border-color:var(--safe);background:var(--safe);}
-.time-count{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:5px;text-align:right;}
-.time-bar{height:3px;background:var(--border-light);border-radius:2px;margin-top:6px;overflow:hidden;}
+.time-count{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:3px;text-align:right;}
+.time-bar{height:2px;background:var(--border-light);border-radius:2px;margin-top:4px;overflow:hidden;}
 .time-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease;}
 
 /* THREAT CHART */
@@ -317,11 +317,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
     <div class="ps">
       <div class="sl" data-i="filter_time">フィルター — 期間</div>
       <div class="time-seg">
-        <div class="tseg realtime on" data-t="1d" onclick="filterByTime('1d')" data-i="t_1d">直近1日</div>
-        <div class="tseg" data-t="7d" onclick="filterByTime('7d')" data-i="t_7d">1週間</div>
-        <div class="tseg" data-t="30d" onclick="filterByTime('30d')" data-i="t_30d">1ヶ月</div>
-      </div>
-      <div class="time-seg2">
+        <div class="tseg realtime on" data-t="1d" onclick="filterByTime('1d')" data-i="t_1d">1日</div>
+        <div class="tseg" data-t="7d" onclick="filterByTime('7d')" data-i="t_7d">1週</div>
+        <div class="tseg" data-t="30d" onclick="filterByTime('30d')" data-i="t_30d">1月</div>
         <div class="tseg" data-t="180d" onclick="filterByTime('180d')" data-i="t_180d">半年</div>
         <div class="tseg" data-t="365d" onclick="filterByTime('365d')" data-i="t_365d">1年</div>
         <div class="tseg" data-t="all" onclick="filterByTime('all')" data-i="t_all">全期間</div>
@@ -687,7 +685,7 @@ const I18N = {
     stat_label:'脅威レベル統計', chart_label:'脅威レベル推移', stat_violation:'侵犯', stat_caution:'警戒', stat_info:'情報',
     filter_type:'フィルター — タイプ', filter_region:'フィルター — 侵犯勢力', filter_time:'フィルター — 期間',
     f_all:'全て', f_violation:'侵犯', f_caution:'警戒', f_info:'情報', f_air:'領空', f_sea:'領海',
-    t_1d:'直近1日', t_7d:'1週間', t_30d:'1ヶ月', t_180d:'半年', t_365d:'1年', t_all:'全期間',
+    t_1d:'1日', t_7d:'1週', t_30d:'1月', t_180d:'半年', t_365d:'1年', t_all:'全期間',
     t_count:'{n}件表示中', t_count_all:'全{n}件',
     r_all:'全勢力', r_china:'中国', r_russia:'ロシア', r_nk:'北朝鮮',
     next_update:'次回更新', legend:'凡例',
@@ -725,7 +723,7 @@ const I18N = {
     stat_label:'Threat Level Stats', chart_label:'Threat Trend', stat_violation:'Violation', stat_caution:'Caution', stat_info:'Info',
     filter_type:'Filter — Type', filter_region:'Filter — Aggressor', filter_time:'Filter — Period',
     f_all:'All', f_violation:'Violation', f_caution:'Warning', f_info:'Info', f_air:'Airspace', f_sea:'Territorial Sea',
-    t_1d:'Last 24h', t_7d:'1 Week', t_30d:'1 Month', t_180d:'6 Months', t_365d:'1 Year', t_all:'All Time',
+    t_1d:'24h', t_7d:'1W', t_30d:'1M', t_180d:'6M', t_365d:'1Y', t_all:'All',
     t_count:'{n} shown', t_count_all:'All {n}',
     r_all:'All', r_china:'China', r_russia:'Russia', r_nk:'N. Korea',
     next_update:'Next Update', legend:'Legend',
@@ -763,7 +761,7 @@ const I18N = {
     stat_label:'威脅等級統計', chart_label:'威脅趨勢', stat_violation:'侵犯', stat_caution:'警戒', stat_info:'資訊',
     filter_type:'篩選 — 類型', filter_region:'篩選 — 地區', filter_time:'篩選 — 期間',
     f_all:'全部', f_violation:'侵犯', f_caution:'警戒', f_info:'資訊', f_air:'領空', f_sea:'領海',
-    t_1d:'最近1天', t_7d:'1週', t_30d:'1個月', t_180d:'半年', t_365d:'1年', t_all:'全部期間',
+    t_1d:'1天', t_7d:'1週', t_30d:'1月', t_180d:'半年', t_365d:'1年', t_all:'全部',
     t_count:'顯示{n}件', t_count_all:'全部{n}件',
     r_all:'全地區', r_japan:'日本', r_taiwan:'台灣', r_philippines:'菲律賓', r_vietnam:'越南', r_nk:'北韓',
     next_update:'下次更新', legend:'圖例',
@@ -801,7 +799,7 @@ const I18N = {
     stat_label:'Antas ng Banta', chart_label:'Trend ng Banta', stat_violation:'Paglabag', stat_caution:'Babala', stat_info:'Impormasyon',
     filter_type:'Filter — Uri', filter_region:'Filter — Rehiyon', filter_time:'Filter — Panahon',
     f_all:'Lahat', f_violation:'Paglabag', f_caution:'Babala', f_info:'Impormasyon', f_air:'Airspace', f_sea:'Teritoryal na Dagat',
-    t_1d:'Huling 24h', t_7d:'1 Linggo', t_30d:'1 Buwan', t_180d:'6 Buwan', t_365d:'1 Taon', t_all:'Lahat ng Oras',
+    t_1d:'24h', t_7d:'1W', t_30d:'1M', t_180d:'6M', t_365d:'1Y', t_all:'All',
     t_count:'{n} Ipinapakita', t_count_all:'Lahat {n}',
     r_all:'Lahat ng Rehiyon', r_japan:'Japan', r_taiwan:'Taiwan', r_philippines:'Pilipinas', r_vietnam:'Vietnam', r_nk:'Hilagang Korea',
     next_update:'Susunod na Update', legend:'Alamat',
@@ -839,7 +837,7 @@ const I18N = {
     stat_label:'Thống Kê Mức Đe Dọa', chart_label:'Xu Hướng', stat_violation:'Vi Phạm', stat_caution:'Cảnh Báo', stat_info:'Thông Tin',
     filter_type:'Lọc — Loại', filter_region:'Lọc — Khu Vực', filter_time:'Lọc — Thời Gian',
     f_all:'Tất Cả', f_violation:'Vi Phạm', f_caution:'Cảnh Báo', f_info:'Thông Tin', f_air:'Vùng Trời', f_sea:'Lãnh Hải',
-    t_1d:'24h Qua', t_7d:'1 Tuần', t_30d:'1 Tháng', t_180d:'6 Tháng', t_365d:'1 Năm', t_all:'Tất Cả',
+    t_1d:'24h', t_7d:'1T', t_30d:'1Th', t_180d:'6Th', t_365d:'1N', t_all:'Tất Cả',
     t_count:'Hiển thị {n}', t_count_all:'Tất cả {n}',
     r_all:'Tất Cả Khu Vực', r_japan:'Nhật Bản', r_taiwan:'Đài Loan', r_philippines:'Philippines', r_vietnam:'Việt Nam', r_nk:'Triều Tiên',
     next_update:'Cập Nhật Tiếp Theo', legend:'Chú Giải',
@@ -1064,10 +1062,10 @@ async function fetchClaude(){
 level: danger=実際の侵犯・発射, warning=接近・準備・妨害, info=EEZ・調査・その他
 ミサイルは zone=missile、landLat/landLng/apogee/rangeを必ず含める。最新20件程度。データなければ[]。`;
   const body=JSON.stringify({
-    model:'claude-sonnet-4-6',
-    max_tokens:8000,
+    model:'claude-haiku-4-5-20251001',
+    max_tokens:4000,
     system: SYSTEM_PROMPT,
-    tools:[{type:'web_search_20250305',name:'web_search'}],
+    tools:[{type:'web_search_20250305',name:'web_search',max_uses:3}],
     messages:[{role:'user',content:prompt}]
   });
   const proxy=isProxyMode();
@@ -1081,8 +1079,22 @@ level: danger=実際の侵犯・発射, warning=接近・準備・妨害, info=E
   const res=await fetch(url,{method:'POST',headers,body});
   if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`Claude API ${res.status}: ${e.error?.message||'Unknown'}`);}
   const data=await res.json();
-  const txt=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
-  try{const m=txt.match(/\[[\s\S]*\]/);if(m)return JSON.parse(m[0]);}catch(e){console.warn(e);}
+  if(!data.content || !Array.isArray(data.content)){console.warn('Unexpected response shape',data);return [];}
+  const txt=data.content.filter(b=>b.type==='text').map(b=>b.text).join('\n');
+  // 複数候補のJSON配列から最初の有効な配列を選ぶ（greedy → 全ての配列を試行）
+  const tryParse=(s)=>{try{return JSON.parse(s);}catch{return null;}};
+  // ```json ... ``` ブロック優先
+  const codeBlock=txt.match(/```(?:json)?\s*(\[[\s\S]*?\])\s*```/);
+  if(codeBlock){const r=tryParse(codeBlock[1]);if(Array.isArray(r))return r;}
+  // 単独の [...] を順に試行（最大→最小）
+  const candidates=[];
+  let depth=0,start=-1;
+  for(let i=0;i<txt.length;i++){
+    if(txt[i]==='['){if(depth===0)start=i;depth++;}
+    else if(txt[i]===']'){depth--;if(depth===0&&start>=0){candidates.push(txt.slice(start,i+1));start=-1;}}
+  }
+  for(const c of candidates){const r=tryParse(c);if(Array.isArray(r)&&r.length>0&&r[0].title)return r;}
+  console.warn('No valid JSON array found in:',txt.slice(0,500));
   return [];
 }
 
