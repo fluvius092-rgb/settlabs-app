@@ -112,9 +112,6 @@ export async function onRequestPost(context) {
     headers: {
       'content-type': 'application/json',
       'x-cache': upstream.ok ? 'MISS' : 'BYPASS',
-      'x-debug-cache-bound': env.APDM_CACHE ? 'yes' : 'no',
-      'x-debug-rl-bound': env.APDM_RL ? 'yes' : 'no',
-      'x-debug-key': hash,
       'cache-control': 'no-store',
     },
   });
