@@ -56,8 +56,8 @@ export async function onRequestPost(context) {
   const cacheKey = `claude:${hash}`;
 
   // キャッシュチェック（KV "CACHE" バインド時）
-  if (env.CACHE) {
-    const cached = await env.CACHE.get(cacheKey);
+  if (env.APDM_CACHE) {
+    const cached = await env.APDM_CACHE.get(cacheKey);
     if (cached) {
       return new Response(cached, {
         status: 200,
@@ -71,13 +71,13 @@ export async function onRequestPost(context) {
   }
 
   // レート制限（キャッシュミス時のみカウント）
-  if (env.RL) {
+  if (env.APDM_RL) {
     const rlKey = `rl:${ip}:${Math.floor(Date.now() / 1000 / 3600)}`;
-    const cnt = parseInt((await env.RL.get(rlKey)) || '0', 10);
+    const cnt = parseInt((await env.APDM_RL.get(rlKey)) || '0', 10);
     if (cnt >= RATE_LIMIT_PER_HOUR) {
       return jsonError(429, 'Rate limit exceeded. Try again in 1h.');
     }
-    await env.RL.put(rlKey, String(cnt + 1), { expirationTtl: 3700 });
+    await env.APDM_RL.put(rlKey, String(cnt + 1), { expirationTtl: 3700 });
   }
 
   if (!env.ANTHROPIC_KEY) {
@@ -98,10 +98,10 @@ export async function onRequestPost(context) {
   const responseText = await upstream.text();
 
   // 成功レスポンスのみキャッシュ（24h TTL）
-  if (upstream.ok && env.CACHE) {
+  if (upstream.ok && env.APDM_CACHE) {
     try {
       // `await` しないことでレスポンスを早く返す（"writing in background"）
-      context.waitUntil(env.CACHE.put(cacheKey, responseText, { expirationTtl: CACHE_TTL_SEC }));
+      context.waitUntil(env.APDM_CACHE.put(cacheKey, responseText, { expirationTtl: CACHE_TTL_SEC }));
     } catch (e) {
       // KV書き込み失敗してもレスポンスは返す
     }
