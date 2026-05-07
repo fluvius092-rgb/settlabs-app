@@ -7,6 +7,9 @@
 # Node.js
 node_modules/
 
+# Astro
+.astro/
+
 # OS生成ファイル
 .DS_Store
 Thumbs.db
