@@ -7,7 +7,7 @@
 //   CACHE  — レスポンスキャッシュ（推奨：DAU増加でも料金一定）
 //   RL     — IP単位レート制限（1時間5回）
 
-const RATE_LIMIT_PER_HOUR = 5;
+const RATE_LIMIT_PER_HOUR = 30;
 const CACHE_TTL_SEC = 24 * 3600;
 const ALLOWED_MODELS = ['claude-sonnet-4-6', 'claude-haiku-4-5-20251001'];
 
