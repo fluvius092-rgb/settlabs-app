@@ -3,100 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SettLabs — Webゲーム・アプリ開発サイト</title>
+<title>SettLabs — Webゲーム・AIアプリ開発</title>
 <meta name="description" content="SettLabsはブラウザで使える無料WebゲームとAIアプリを開発・公開している個人サイトです。SCP Card Battle・契約書かんたん読みを公開中。">
-<meta name="theme-color" content="#08090c">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="/site.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7502065458216315" crossorigin="anonymous"></script>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #08090c; color: #b8ccd8; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 48px 16px 32px; }
-  h1 { font-size: 2rem; letter-spacing: 4px; color: #00c8f0; margin-bottom: 8px; }
-  .tagline { font-size: 0.8rem; color: #4a6070; letter-spacing: 1px; margin-bottom: 40px; }
-  .games { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 900px; }
-  .game-card { display: block; width: 280px; background: #0d1117; border: 1px solid #1a2a3a; border-radius: 12px; text-decoration: none; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
-  .game-card:hover { border-color: #00c8f0; transform: translateY(-4px); }
-  .game-card img { width: 100%; height: 160px; object-fit: cover; }
-  .game-card .info { padding: 16px; }
-  .game-card .info h2 { font-size: 1rem; color: #fff; margin-bottom: 8px; }
-  .game-card .info p { font-size: 0.75rem; color: #6a8090; line-height: 1.6; }
-  .game-card .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
-  .game-card .tag { font-size: 0.65rem; color: #4a6070; background: #0a0f18; border: 1px solid #1a2a3a; border-radius: 3px; padding: 1px 6px; }
-  .about-section { max-width: 640px; width: 100%; margin-top: 56px; padding-top: 32px; border-top: 1px solid #1a2a3a; }
-  .about-section h2 { font-size: 0.85rem; color: #00c8f0; letter-spacing: 2px; margin-bottom: 16px; }
-  .about-section p { font-size: 0.8rem; color: #6a8090; line-height: 1.85; margin-bottom: 12px; }
-  .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin: 16px 0; }
-  .feature-list li { background: #0d1117; border: 1px solid #1a2a3a; border-radius: 6px; padding: 10px 14px; font-size: 0.75rem; color: #8aa0b0; }
-  .feature-list li strong { display: block; color: #00c8f0; margin-bottom: 3px; font-size: 0.72rem; letter-spacing: 1px; }
-  footer { margin-top: 48px; font-size: 0.7rem; color: #4a6070; text-align: center; }
-  footer nav { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  footer nav a { color: #6a8090; text-decoration: none; }
-  footer nav a:hover { color: #00c8f0; }
-  footer .copyright { margin-top: 10px; font-size: 0.65rem; color: #2a3a48; }
-</style>
 </head>
 <body>
 
-<h1>SETTLABS</h1>
-<p class="tagline">Browser Games &amp; Apps — Free to Use</p>
-
-<div class="games">
-  <a href="/scp_card_battle/" class="game-card">
-    <img src="/scp_card_battle/og-image.png" alt="SCP Card Battle">
-    <div class="info">
-      <h2>SCP Card Battle</h2>
-      <p>SCP財団をテーマにしたコレクション＆カードバトルゲーム。200体以上のSCPカードを集め、デッキを組んでオンライン対戦に挑め。インストール不要・無料プレイ。</p>
-      <div class="tags">
-        <span class="tag">無料</span>
-        <span class="tag">カードゲーム</span>
-        <span class="tag">オンライン対戦</span>
-        <span class="tag">SCP</span>
-        <span class="tag">日英対応</span>
-      </div>
-    </div>
-  </a>
-  <a href="/contract_reader/" class="game-card">
-    <img src="/contract_reader/og-image.png" alt="契約書かんたん読み">
-    <div class="info">
-      <h2>契約書かんたん読み</h2>
-      <p>契約書・利用規約をAIがわかりやすく解説。PDFや画像をアップロードするだけで、難しい法律用語をやさしい言葉に翻訳。注意すべき条項も自動で抽出。</p>
-      <div class="tags">
-        <span class="tag">無料</span>
-        <span class="tag">AI解析</span>
-        <span class="tag">契約書</span>
-        <span class="tag">PDF対応</span>
-        <span class="tag">Android対応</span>
-      </div>
-    </div>
-  </a>
-</div>
-
-<div class="about-section">
-  <h2>ABOUT SETTLABS</h2>
-  <p>SettLabsは、ブラウザで手軽に遊べるWebゲームを開発・公開している個人運営サイトです。PCでもスマートフォンでもインストール不要でそのまま遊べる無料ゲームを提供しています。</p>
-  <p>現在公開中のゲームは「SCP Card Battle」です。SCP財団（SCP Foundation）の世界観をベースに、200体以上のSCPをカード化したコレクション＆対戦ゲームです。カードを集めてデッキを組み、世界中のプレイヤーとリアルタイムのカードバトルが楽しめます。</p>
-
-  <ul class="feature-list">
-    <li><strong>200+ CARDS</strong>SCP-001からSCP-6500まで多数のSCPカードを収録</li>
-    <li><strong>ONLINE BATTLE</strong>リアルタイムのオンライン1対1対戦</li>
-    <li><strong>DECK BUILDING</strong>コスト制限付きの戦略的なデッキ構築</li>
-    <li><strong>RANKING</strong>シーズン制のランキングで実力を競う</li>
-    <li><strong>FREE TO PLAY</strong>完全無料・アカウント登録不要</li>
-    <li><strong>JP / EN</strong>日本語・英語の2言語対応</li>
+<nav class="site-nav">
+  <a class="logo" href="/">SettLabs.</a>
+  <ul class="nav-links">
+    <li><a href="/blog/">Blog</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/contact.html">Contact</a></li>
   </ul>
+</nav>
 
-  <p>SCP財団コンテンツはSCP Wikiの <a href="https://creativecommons.org/licenses/by-sa/3.0/" style="color:#00c8f0">CC BY-SA 3.0</a> ライセンスに基づいて利用しています。本サイトはSCP財団および SCP Wiki の非公式ファンサイトです。</p>
-</div>
+<main>
 
-<footer>
+  <section class="hero">
+    <p class="hero-eyebrow">Individual Development Studio</p>
+    <h1>Webゲーム<br>AIアプリ開発</h1>
+    <p class="hero-desc">ブラウザで手軽に使えるゲームとAIツールを個人で開発・公開しています。インストール不要・完全無料でご利用いただけます。</p>
+  </section>
+
+  <p class="section-label">Works</p>
+
+  <a class="work-item" href="/scp_card_battle/" data-image="img-scp">
+    <ul class="work-tags">
+      <li class="work-tag">Browser Game</li>
+      <li class="work-tag">Card Battle</li>
+      <li class="work-tag">Online PvP</li>
+      <li class="work-tag">SCP</li>
+      <li class="work-tag">JP / EN</li>
+    </ul>
+    <div class="work-body">
+      <h3>SCP Card Battle</h3>
+      <p>SCP財団をテーマにしたコレクション＆対戦カードゲームです。200体以上のSCPカードを集めてデッキを組み、オンライン対戦に挑めます。インストール不要・完全無料でご利用いただけます。</p>
+    </div>
+    <span class="work-year">2025</span>
+  </a>
+
+  <a class="work-item" href="/contract_reader/" data-image="img-cr">
+    <ul class="work-tags">
+      <li class="work-tag">AI App</li>
+      <li class="work-tag">PDF / OCR</li>
+      <li class="work-tag">Android</li>
+      <li class="work-tag">Claude AI</li>
+    </ul>
+    <div class="work-body">
+      <h3>契約書かんたん読み</h3>
+      <p>契約書・利用規約をAIがやさしい言葉で解説します。PDFや画像をアップロードするだけで難解な法律用語を翻訳し、注意すべき条項を自動で抽出します。</p>
+    </div>
+    <span class="work-year">2025</span>
+  </a>
+
+  <a class="work-item" href="/blog/">
+    <ul class="work-tags">
+      <li class="work-tag">Notes</li>
+      <li class="work-tag">Blog</li>
+      <li class="work-tag">Astro</li>
+      <li class="work-tag">Markdown</li>
+    </ul>
+    <div class="work-body">
+      <h3>SettLabs Blog</h3>
+      <p>Webゲーム・AIアプリ開発の記録。実装で詰まったポイント、設計判断、リリース後のフィードバックを残していく場所です。</p>
+    </div>
+    <span class="work-year">2026</span>
+  </a>
+
+  <div class="about-section">
+    <span class="sec-label">About</span>
+    <p>SettLabsは、ブラウザで手軽に使えるWebゲームとAIアプリを開発・公開している個人運営のサイトです。インストール不要・完全無料でご利用いただけるサービスを提供しています。</p>
+  </div>
+
+  <dl class="info-bar">
+    <div class="info-block">
+      <dt>Products</dt>
+      <dd>SCP Card Battle<br>契約書かんたん読み</dd>
+    </div>
+    <div class="info-block">
+      <dt>Stack</dt>
+      <dd>Vanilla JS / Firebase<br>Cloudflare / Claude AI</dd>
+    </div>
+    <div class="info-block">
+      <dt>Contact</dt>
+      <dd><a id="email" href="mailto:settlabs.app@gmail.com">settlabs.app@gmail.com</a></dd>
+    </div>
+  </dl>
+
+</main>
+
+<footer class="site-footer">
   <nav>
-    <a href="/">Home</a>
+    <a href="/">Index</a>
+    <a href="/blog/">Blog</a>
     <a href="/about.html">About</a>
-    <a href="/privacy.html">Privacy Policy</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
     <a href="/contact.html">Contact</a>
     <a href="/scp_card_battle/guide.html">遊び方ガイド</a>
   </nav>
   <p class="copyright">&copy; 2026 SettLabs</p>
 </footer>
+
+<aside class="hover-stage" aria-hidden="true">
+  <img id="img-scp" src="/scp_card_battle/og-image.png" alt="">
+  <img id="img-cr" src="/contract_reader/og-image.png" alt="">
+</aside>
+
+<div id="copy-notification" class="copy-notification">Copied!</div>
+
+<script>
+(function(){
+  var stage = document.querySelector('.hover-stage');
+  var links = document.querySelectorAll('.work-item[data-image]');
+  if (stage && links.length) {
+    function deactivate() {
+      stage.querySelectorAll('img').forEach(function(i){ i.classList.remove('active'); });
+    }
+    links.forEach(function(a){
+      a.addEventListener('mouseenter', function(){
+        deactivate();
+        var img = document.getElementById(a.dataset.image);
+        if (img) img.classList.add('active');
+      });
+      a.addEventListener('mouseleave', function(){ deactivate(); });
+    });
+  }
+
+  var email = document.getElementById('email');
+  var notif = document.getElementById('copy-notification');
+  if (email && notif) {
+    email.addEventListener('click', function(e){
+      if (navigator.clipboard) {
+        e.preventDefault();
+        navigator.clipboard.writeText('settlabs.app@gmail.com').then(function(){
+          var rect = email.getBoundingClientRect();
+          notif.style.left = rect.left + 'px';
+          notif.style.top = (rect.bottom + 6) + 'px';
+          notif.classList.add('show');
+          setTimeout(function(){ notif.classList.remove('show'); }, 1400);
+        });
+      }
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
