@@ -405,7 +405,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 // ══════════════════════════ STATE ══════════════════════════
 let incidents = [], selId = null, curFilter = 'all', curRegion = 'all', curTimeRange = '1d';
 let apiKeys = { anthropic:'', currents:'' };
-let isDemo = false, cntTimer = null, countdown = 43200;
+let isDemo = false, cntTimer = null, countdown = 86400;
 // ══════════════════════════ MAP STATE ══════════════════════════
 let _map = null, _incidentLayer = null;
 
@@ -964,7 +964,7 @@ function closeModal(){document.getElementById('apiModal').style.display='none';}
 // 同時実行ガード
 let _fetching = false;
 const CACHE_KEY = 'jadm_cache_v1';
-const CACHE_TTL_MS = 24*3600*1000; // 24h
+const CACHE_TTL_MS = 24*3600*1000; // 24h（ページ開いたとき+自動更新も24h間隔）
 
 // 重複排除キー: 日付(yyyy-mm-dd) + 国 + 場所
 function incKey(inc){
@@ -1027,7 +1027,7 @@ async function fetchAll(forceRefresh=false){
     mergeIncidents(merged, [...prevIds]);
     setStatus('',t('status_live'));
     document.getElementById('lupd').textContent=t('lupd_prefix')+fmtTime(new Date());
-    countdown=43200; startCnt();
+    countdown=86400; startCnt();
   }catch(err){
     console.error(err); setStatus('error',t('status_error'));
     if(!incidents.length)loadDemo();
