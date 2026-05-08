@@ -1268,7 +1268,7 @@ function renderChart(){
   const range=curTimeRange;
   const now=new Date();
   // bin config: count=number of bins, fmt=label formatter
-  const cfg={
+  let cfg={
     '1d':  {count:6, ms:4*3600*1000, fmt:d=>String(d.getHours()).padStart(2,'0')+'h'},
     '7d':  {count:7, ms:86400*1000, fmt:d=>(d.getMonth()+1)+'/'+d.getDate()},
     '30d': {count:10, ms:3*86400*1000, fmt:d=>(d.getMonth()+1)+'/'+d.getDate()},
@@ -1283,7 +1283,15 @@ function renderChart(){
   if(range==='all'){
     const dates=incidents.map(i=>parseDate(i.datetime)?.getTime()).filter(Boolean);
     if(!dates.length){el.innerHTML=`<div class="chart-empty">${t('list_empty')}</div>`;return;}
-    startMs=Math.min(...dates); endMs=Math.max(...dates, now.getTime());
+    // 全期間は年単位でビン化: 各データの最小年〜最大年を1年刻みで表示
+    const minD=new Date(Math.min(...dates));
+    const maxD=new Date(Math.max(...dates));
+    const startYear=minD.getFullYear();
+    const endYear=Math.max(maxD.getFullYear(), now.getFullYear());
+    const yearCount=endYear-startYear+1;
+    startMs=new Date(startYear,0,1).getTime();
+    endMs=new Date(endYear+1,0,1).getTime();
+    cfg={count:yearCount, ms:365*86400*1000, fmt:d=>d.getFullYear()+'年'};
   } else {
     const days=TIME_RANGES[range]||30;
     startMs=now.getTime()-days*86400000;
