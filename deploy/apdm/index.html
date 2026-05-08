@@ -1376,7 +1376,7 @@ function switchDTab(tab, el){
   el.classList.add('on');
   const db=document.getElementById('db');
   const dl=document.getElementById('dl');
-  if(tab==='list'){db.classList.add('off');dl.classList.add('on');}
+  if(tab==='list'){db.classList.add('off');dl.classList.add('on');if(selId!==null) clearSel();}
   else{db.classList.remove('off');dl.classList.remove('on');}
 }
 
@@ -1516,6 +1516,7 @@ function mTab(tab,el){
   el.classList.add('on');
   document.getElementById('msh-list').style.display=tab==='list'?'flex':'none';
   document.getElementById('msh-detail').style.display=tab==='detail'?'flex':'none';
+  if(tab==='list' && selId!==null) clearSel();
 }
 
 // ══════════════════════════ BOOT ══════════════════════════
