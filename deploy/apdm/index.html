@@ -207,9 +207,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 @media(max-width:700px){
   .pl,.pr{display:none;}
   .mbar{display:flex!important;}
-  .msh{display:flex!important;}
+  .msh{display:flex!important;max-height:38vh;}
   .layout{bottom:calc(var(--th) + 42px);}
   .hdr-badge-wrap{display:none;}
+  /* perf: アニメーション・blur を無効化して描画負荷を下げる */
+  .inc-marker .pulse,
+  .inc-marker.recent .core,
+  .inc-marker.recent .ring,
+  .inc-marker.recent .tri,
+  .missile-arc{animation:none!important;}
+  .leaflet-tooltip,.mu,.mhint,.chart-tooltip,.md{backdrop-filter:none!important;}
 }
 .mbar{display:none;position:fixed;bottom:var(--th);left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:200;padding:6px 12px;gap:6px;align-items:center;}
 .mtab{flex:1;padding:7px;border-radius:var(--r);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:var(--mono);font-size:10px;cursor:pointer;text-align:center;transition:all .15s;}
