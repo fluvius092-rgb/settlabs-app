@@ -1009,23 +1009,69 @@ function mergeIncidents(fetched, prevKeys){
 function isProxyMode(){return apiKeys.anthropic==='proxy';}
 
 async function fetchClaude(){
-  const prompt=`以下の地域における軍事的挑発・侵犯・接近情報を直近6ヶ月で検索してください：
+  const today=new Date().toISOString().slice(0,10);
+  const prompt=`基準日: ${today}
+基準日から過去60日以内に発生した以下の事案を、各国公式発表または信頼性の高い報道（NHK/共同通信/Reuters/USNI/防衛省/台湾国防部/フィリピン沿岸警備隊/韓国合同参謀本部/米国防総省）から抽出してください。
 
-【日本】防衛省・統合幕僚監部（mod.go.jp/js）、海上保安庁の公式発表から：領空侵犯・スクランブル発進、領海侵入、EEZ内無許可活動
-【台湾】台湾国防部の発表から：中国軍機のADIZ侵入、台湾海峡中間線越え、軍事演習
-【フィリピン】フィリピン沿岸警備隊・国防省から：南シナ海での中国船による妨害・放水砲・体当たり
-【ベトナム】ベトナム外務省・国防省から：南シナ海での中国船による漁船拿捕・EEZ侵犯
-【北朝鮮ミサイル】防衛省・韓国合同参謀本部・米国防総省から：弾道ミサイル・巡航ミサイル発射、核実験準備、軍事施設活動
+【探索カテゴリ — 優先順】
+A. 北朝鮮ミサイル発射（弾道・巡航・極超音速・固体燃料新型）
+B. 中国軍機・艦船の対日接近（領空侵犯・スクランブル発進・空母通過・宮古海峡通過）
+C. 中国海警の尖閣諸島領海侵入・接続水域連続入域
+D. 台湾ADIZへの中国軍機侵入（具体機数）・大規模演習（海峡雷霆等）
+E. 中国海警/PLA海軍によるフィリピン船舶への放水砲・体当たり・衝突
+F. ロシア機の対日接近（Tu-95/Tu-142/Su-35/IL-38/MiG-31）
+G. 中露共同爆撃機合同飛行・海軍合同演習
 
-結果をJSON配列のみで返してください（他のテキスト不要）：
-[{"id":1,"level":"danger|warning|info","zone":"air|sea|eez|missile","title":"案件種別","country":"侵犯国","asset":"機体・船舶・ミサイル名","location":"場所・発射地","lat":発射地緯度,"lng":発射地経度,"landLat":落下推定緯度または0,"landLng":落下推定経度または0,"apogee":最高高度km整数または0,"range":飛翔距離km整数または0,"datetime":"YYYY-MM-DD HH:MM","action":"対応","detail":"詳細","source":"出典","region":"japan|taiwan|philippines|vietnam|nk_missile","ds":"claude"}]
-level: danger=実際の侵犯・発射, warning=接近・準備・妨害, info=EEZ・調査・その他
-ミサイルは zone=missile、landLat/landLng/apogee/rangeを必ず含める。最新20件程度。データなければ[]。`;
+【除外】
+- 年度合計XXX回のような統計情報
+- 政治的論評・推測（事実のみ）
+- 60日以前の事案
+- 同一事案の重複（最大15件）
+
+【country フィールド規約】
+侵犯主体国を必ず以下から選択（部分一致でフィルタされる）:
+- "中国" / "ロシア" / "北朝鮮" / "中国・ロシア"（共同行動時）
+
+【出力】JSON配列のみ。マークダウン・前置き禁止。最大15件、無ければ []。
+[
+  {
+    "id": 連番1〜,
+    "level": "danger" | "warning" | "info",
+    "zone": "air" | "sea" | "eez" | "missile",
+    "title": "30字以内の事案名",
+    "country": "中国" | "ロシア" | "北朝鮮" | "中国・ロシア",
+    "asset": "機体/艦船/ミサイル名（型式まで）",
+    "location": "発生・発射地（日本語、地名具体的に）",
+    "lat": 発生地緯度（数値必須、小数2-3桁）,
+    "lng": 発生地経度（数値必須、小数2-3桁）,
+    "landLat": 落下緯度（ミサイルのみ、その他は省略可）,
+    "landLng": 落下経度（ミサイルのみ）,
+    "apogee": 最高高度km整数（ミサイルのみ）,
+    "range": 飛翔距離km整数（ミサイルのみ）,
+    "datetime": "YYYY-MM-DD HH:MM（発表時刻）",
+    "action": "日本側または当該国側対応",
+    "detail": "150字以内の事案概要",
+    "source": "発表機関 YYYY年M月D日",
+    "region": "japan" | "taiwan" | "philippines" | "vietnam" | "nk_missile",
+    "ds": "claude"
+  }
+]
+
+【level 判定基準】
+- danger = 実際の領空・領海侵犯／ミサイル発射／物理的攻撃（衝突・放水砲・体当たり）
+- warning = 接近・準備動向・妨害行為（拿捕・嫌がらせ）・大規模演習
+- info = EEZ内調査・偵察・施設活動・動向確認
+
+【zone 判定】
+- air = 空中事案（領空侵犯・ADIZ侵入・スクランブル）
+- sea = 海上事案（領海侵入・接続水域・艦船衝突）
+- eez = EEZ内活動（調査船・無許可活動）
+- missile = ミサイル発射（landLat/landLng/apogee/range 必須）`;
   const body=JSON.stringify({
-    model:'claude-haiku-4-5-20251001',
-    max_tokens:4000,
+    model:'claude-sonnet-4-6',
+    max_tokens:6000,
     system: SYSTEM_PROMPT,
-    tools:[{type:'web_search_20250305',name:'web_search',max_uses:3}],
+    tools:[{type:'web_search_20250305',name:'web_search',max_uses:4}],
     messages:[{role:'user',content:prompt}]
   });
   const proxy=isProxyMode();
