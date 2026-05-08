@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://unpkg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com; connect-src 'self' https://settlabs.app https://cloudflareinsights.com; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://unpkg.com https://static.cloudflareinsights.com https://adm.shinobi.jp; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com https://*.shinobi.jp; frame-src https://*.shinobi.jp; connect-src 'self' https://settlabs.app https://cloudflareinsights.com; base-uri 'self'; form-action 'none'">
 <title>APDM — Asia-Pacific Defense Monitor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -65,7 +65,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 /* LEFT PANEL */
 .pl{width:var(--pw);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
 .ps{padding:6px 12px;border-bottom:1px solid var(--border-light);}
-.sl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:5px;}
+.sl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:#fff;text-transform:uppercase;margin-bottom:5px;}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
 .sc{background:var(--bg);border:1px solid var(--border-light);border-radius:var(--r);padding:4px 6px;text-align:center;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
 .sc:hover{border-color:var(--accent);}
@@ -74,9 +74,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .sc.act-i{border-color:var(--accent);background:var(--accent-glow);}
 .sn{font-family:var(--display);font-size:18px;font-weight:700;line-height:1;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:'lnum' 1,'tnum' 1;}
 .sn.d{color:var(--danger);} .sn.w{color:var(--warning);} .sn.i{color:var(--accent);}
-.sk{font-size:10px;color:var(--text-muted);}
+.sk{font-size:10px;color:#fff;}
 .chips{display:flex;flex-wrap:wrap;gap:4px;}
-.chip{font-family:var(--mono);font-size:10px;padding:3px 9px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);cursor:pointer;transition:all .15s;}
+.chip{font-family:var(--mono);font-size:10px;padding:3px 9px;border:1px solid var(--border);border-radius:20px;background:transparent;color:#fff;cursor:pointer;transition:all .15s;}
 .chip:hover,.chip.on{border-color:var(--accent);color:var(--accent);background:var(--accent-glow);}
 .ilist{flex:1;overflow-y:auto;padding:6px;}
 .ii{padding:10px 12px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;transition:all .15s;margin-bottom:3px;position:relative;padding-left:16px;}
@@ -121,6 +121,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .inc-marker .cross::after{top:0;bottom:0;left:50%;width:1px;transform:translateX(-50%);}
 .inc-marker .tri{position:absolute;top:50%;left:50%;transform:translate(-50%,-67%) scale(var(--ms,1));transform-origin:50% 67%;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom-style:solid;border-bottom-width:10px;pointer-events:none;}
 .inc-marker .impact{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(var(--ms,1));font-family:var(--mono);font-weight:bold;font-size:14px;text-shadow:0 0 4px currentColor;pointer-events:none;}
+.inc-marker.recent .core,.inc-marker.recent .ring,.inc-marker.recent .tri{animation:slow-blink 3s ease-in-out infinite;}
+@keyframes slow-blink{0%,100%{opacity:1;}50%{opacity:.25;}}
 .missile-arc{animation:dashflow 4s linear infinite;filter:drop-shadow(0 0 3px currentColor);}
 .missile-arc-cruise{animation-duration:2.5s;}
 @keyframes dashflow{from{stroke-dashoffset:0;}to{stroke-dashoffset:-40;}}
@@ -221,7 +223,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 /* TIME FILTER */
 .time-seg{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;}
 .time-seg2{display:none;}
-.tseg{font-family:var(--mono);font-size:9px;padding:3px 2px;border:1px solid var(--border);border-radius:var(--r);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.2px;line-height:1.2;}
+.tseg{font-family:var(--mono);font-size:9px;padding:3px 2px;border:1px solid var(--border);border-radius:var(--r);background:transparent;color:#fff;cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.2px;line-height:1.2;}
 .tseg:hover{border-color:var(--accent);color:var(--accent);}
 .tseg.on{border-color:var(--accent);color:#fff;background:var(--accent);}
 .tseg.on.realtime{border-color:var(--safe);background:var(--safe);}
@@ -247,6 +249,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 </style>
 </head>
 <body>
+<!-- admax -->
+<script src="https://adm.shinobi.jp/s/5b6c314c9055e8225bc2c93d55969279"></script>
+<!-- admax -->
 
 <!-- LOADING -->
 <div class="lo" id="lo" style="display:none">
@@ -603,6 +608,8 @@ function bezierArc(p1, p2, lift){
 function renderMap(){
   if(!_incidentLayer) return;
   _incidentLayer.clearLayers();
+  const _now = Date.now();
+  const _7d = 7*24*3600*1000;
   filtered().forEach(inc=>{
     if(!inc.lat || !inc.lng) return;
     const isMissile = inc.zone === 'missile';
@@ -611,11 +618,14 @@ function renderMap(){
               : inc.level==='danger' ? '#f85149'
               : inc.level==='warning' ? '#d29922' : '#2f81f7';
     const isSel = selId === inc.id;
+    const incDate = parseDate(inc.datetime);
+    const isRecent = incDate && (_now - incDate.getTime()) < _7d;
+    const recentCls = isRecent ? ' recent' : '';
     const tipHTML = `<span style="color:${col}">▲ ${esc(inc.title)}</span><br>${esc(inc.country)} / ${esc(inc.location)}<br><span style="color:#7d8590">${esc(inc.datetime)}</span>`;
 
     if(isMissile){
       const html = `<div class="pulse" style="border-color:${col}"></div><div class="tri" style="border-bottom-color:${col};filter:drop-shadow(0 0 6px ${col})"></div>`;
-      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':''), html, iconSize:[40,40], iconAnchor:[20,20]});
+      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':'')+recentCls, html, iconSize:[40,40], iconAnchor:[20,20]});
       const m = L.marker([inc.lat,inc.lng],{icon}).addTo(_incidentLayer);
       m.on('click', ()=>selectInc(inc.id));
       m.bindTooltip(tipHTML, {direction:'top', offset:[0,-8]});
@@ -642,7 +652,7 @@ function renderMap(){
     } else {
       const crossHTML = inc.level==='danger' ? `<div class="cross" style="color:${col}"></div>` : '';
       const html = `<div class="pulse" style="border-color:${col}"></div>${crossHTML}<div class="ring" style="border-color:${col}"></div><div class="core" style="background:${col};box-shadow:0 0 10px ${col}"></div>`;
-      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':''), html, iconSize:[40,40], iconAnchor:[20,20]});
+      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':'')+recentCls, html, iconSize:[40,40], iconAnchor:[20,20]});
       const m = L.marker([inc.lat,inc.lng],{icon}).addTo(_incidentLayer);
       m.on('click', ()=>selectInc(inc.id));
       m.bindTooltip(tipHTML, {direction:'top', offset:[0,-8]});
