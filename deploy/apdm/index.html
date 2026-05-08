@@ -207,9 +207,21 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 @media(max-width:700px){
   .pl,.pr{display:none;}
   .mbar{display:flex!important;}
-  .msh{display:flex!important;max-height:38vh;}
+  /* !important削除: JSのstyle.display='none'切替を効かせる */
+  .msh{display:flex;max-height:38vh;}
   .layout{bottom:calc(var(--th) + 42px);}
   .hdr-badge-wrap{display:none;}
+  /* ヘッダーコンパクト化: 言語スイッチが見切れない */
+  .hdr{padding:6px 8px;gap:6px;flex-wrap:wrap;height:auto;min-height:46px;}
+  .logo{font-size:14px;}
+  .logo span{display:none!important;}
+  .clk{font-size:9px;}
+  .pill{padding:2px 6px;font-size:9px;gap:3px;}
+  .pill .dot{width:6px;height:6px;}
+  .lang-btn{padding:2px 4px;font-size:8px;}
+  .btn{padding:4px 8px;font-size:10px;}
+  .hdr-r{gap:4px;}
+  .sep{display:none;}
   /* perf: アニメーション・blur を無効化して描画負荷を下げる */
   .inc-marker .pulse,
   .inc-marker.recent .core,
