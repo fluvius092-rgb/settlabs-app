@@ -20,26 +20,24 @@ const path = require('path');
 const FILE = path.join(__dirname, '..', 'deploy', 'apdm', 'index.html');
 
 // 主要陸塊のbounding box（過検出許容、海上はOVERRIDESで個別救済）
+// 本州・九州・北海道は沿岸近郊も「視覚的に領土上に見える」リスクとして検出する
 const LAND = [
-  {name:'台湾本島',         minLat:21.9, maxLat:25.3, minLng:120.0, maxLng:122.0},
-  {name:'日本本州',         minLat:34.0, maxLat:41.5, minLng:131.0, maxLng:142.0},
-  {name:'日本九州',         minLat:31.0, maxLat:34.0, minLng:130.0, maxLng:132.0},
-  {name:'日本北海道',       minLat:41.5, maxLat:45.5, minLng:140.0, maxLng:145.6},
-  {name:'中国大陸 沿岸',    minLat:23.0, maxLat:40.0, minLng:108.0, maxLng:121.5},
-  {name:'フィリピン ルソン', minLat:13.0, maxLat:18.5, minLng:120.0, maxLng:122.5},
+  {name:'台湾本島',          minLat:21.9, maxLat:25.3, minLng:120.0, maxLng:122.0},
+  {name:'日本本州・伊豆諸島', minLat:33.5, maxLat:41.5, minLng:132.0, maxLng:141.5},
+  {name:'日本九州',           minLat:31.0, maxLat:34.0, minLng:129.5, maxLng:132.0},
+  {name:'日本北海道',         minLat:41.5, maxLat:45.5, minLng:140.0, maxLng:145.6},
+  {name:'中国大陸 沿岸',      minLat:23.0, maxLat:40.0, minLng:108.0, maxLng:121.5},
+  {name:'フィリピン ルソン',  minLat:13.0, maxLat:18.5, minLng:120.0, maxLng:122.5},
   {name:'フィリピン パラワン',minLat:9.0,  maxLat:11.5, minLng:118.0, maxLng:119.5},
-  {name:'ベトナム',         minLat:8.5,  maxLat:23.0, minLng:103.0, maxLng:109.5},
-  {name:'朝鮮半島南部',     minLat:34.5, maxLat:38.5, minLng:126.0, maxLng:129.5},
-  {name:'樺太',             minLat:45.8, maxLat:54.0, minLng:141.5, maxLng:144.5},
+  {name:'ベトナム',           minLat:8.5,  maxLat:23.0, minLng:103.0, maxLng:109.5},
+  {name:'朝鮮半島南部',       minLat:34.5, maxLat:38.5, minLng:126.0, maxLng:129.5},
+  {name:'樺太',               minLat:45.8, maxLat:54.0, minLng:141.5, maxLng:144.5},
 ];
 
 // 過検出を救済するホワイトリスト（実際は海上の座標）
 // 「lat,lng」キーで完全一致。新規データで本当に海上な座標は追加してOK。
 const SEA_OVERRIDES = new Set([
-  // 日本周辺
-  '34,139',     // 八丈島東方太平洋（年間統計レコード群）
-  '35,140',     // 茨城沖
-  '36,140',     // 茨城・千葉沖
+  // 日本周辺（boundingbox内だが実は海上）
   '37.5,134.5', // 日本海中央（中露共同爆撃機の合流点）
   '41.5,140.5', // 津軽海峡
   '43,140',     // 北海道西方日本海
