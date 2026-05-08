@@ -1388,10 +1388,14 @@ function renderChart(){
   // 表示対象国を決定
   const countries = curRegion==='all' ? ['china','russia','nk'] : [curRegion];
 
-  // 全データから年範囲を抽出
+  // 全データから年範囲を抽出（進行中の年は部分集計なので除外）
+  const currentYear = new Date().getFullYear();
   const allYears = new Set();
   for(const c of Object.keys(OFFICIAL_STATS)){
-    for(const y of Object.keys(OFFICIAL_STATS[c])) allYears.add(+y);
+    for(const y of Object.keys(OFFICIAL_STATS[c])) {
+      const yr = +y;
+      if(yr < currentYear) allYears.add(yr);
+    }
   }
   const years = [...allYears].sort((a,b)=>a-b);
   if(!years.length){el.innerHTML=`<div class="chart-empty">${t('list_empty')}</div>`;return;}
