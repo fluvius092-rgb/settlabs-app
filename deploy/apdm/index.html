@@ -568,7 +568,7 @@ function initMap(){
     hit.on('click', e => { L.DomEvent.stopPropagation(e); showLineInfo(`九段線 ${seg.n}/9`, seg.loc, mid, '#f85149'); });
     hit.getElement() && (hit.getElement().style.cursor='pointer');
     // 視認用の点線（非インタラクティブ）
-    L.polyline(latlngs, {color:'#f85149', weight:3, opacity:0.85, dashArray:'2,4', lineCap:'round', interactive:false}).addTo(_map);
+    L.polyline(latlngs, {color:'#f85149', weight:1.3, opacity:0.7, dashArray:'3,3', interactive:false}).addTo(_map);
   });
   L.polyline(TAIWAN_STRAIT_LINE.map(p=>[p[1],p[0]]), {color:'#d29922', weight:1.3, dashArray:'3,3', opacity:0.7, smoothFactor:0.3, interactive:false}).addTo(_map);
 
