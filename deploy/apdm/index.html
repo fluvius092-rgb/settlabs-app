@@ -262,6 +262,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .chart-bar-w{fill:var(--warning);}
 .chart-bar-i{fill:var(--accent);}
 .chart-bar-d:hover,.chart-bar-w:hover,.chart-bar-i:hover{filter:brightness(1.3);}
+.chart-line-d{stroke:var(--danger);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;}
+.chart-line-w{stroke:var(--warning);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;}
+.chart-dot-d{fill:var(--danger);stroke:#0d1117;stroke-width:0.5;}
+.chart-dot-w{fill:var(--warning);stroke:#0d1117;stroke-width:0.5;}
+.chart-dot-d:hover,.chart-dot-w:hover{r:3.5;filter:brightness(1.4);}
 .chart-grid{stroke:var(--border-light);stroke-width:0.5;stroke-dasharray:2,3;}
 .chart-tick{font-family:var(--mono);font-size:7px;fill:var(--text-dim);}
 .chart-tooltip{position:absolute;background:rgba(22,27,34,.96);border:1px solid var(--border);border-radius:var(--r);padding:5px 8px;font-family:var(--mono);font-size:10px;pointer-events:none;display:none;z-index:30;backdrop-filter:blur(8px);white-space:nowrap;}
@@ -1404,9 +1409,12 @@ function renderChart(){
   });
   const max = Math.max(1, ...bins.map(b=>b.d+b.w));
 
-  // SVG render
-  const W=300, H=90, top=8, bot=18, plot=H-top-bot;
-  const barW = W / bins.length;
+  // SVG render（折れ線グラフ）
+  const W=300, H=90, top=8, bot=18, padX=14, plot=H-top-bot;
+  const usableW = W - padX*2;
+  const xOf = i => padX + (bins.length>1 ? (i/(bins.length-1))*usableW : usableW/2);
+  const yOf = v => top + plot*(1 - v/max);
+
   let svg=`<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`;
   for(let g=1; g<=3; g++){
     const y = top + plot*(1-g/3);
@@ -1414,22 +1422,25 @@ function renderChart(){
   }
   svg+=`<text x="2" y="${top+5}" class="chart-tick">${max}</text>`;
 
-  // バー（積み上げ: danger下 / warning上）
+  // 折れ線（warning=黄、danger=赤）— warning が多いので下層に描画
+  const linePts = key => bins.map((b,i)=>`${xOf(i).toFixed(1)},${yOf(b[key]).toFixed(1)}`).join(' ');
+  if(bins.some(b=>b.w>0)){
+    svg+=`<polyline points="${linePts('w')}" class="chart-line-w" fill="none"/>`;
+  }
+  if(bins.some(b=>b.d>0)){
+    svg+=`<polyline points="${linePts('d')}" class="chart-line-d" fill="none"/>`;
+  }
+
+  // データポイント（hover で値表示）
   bins.forEach((b,i)=>{
-    const x = i*barW + 1.5;
-    const w = Math.max(2, barW-3);
-    const total = b.d + b.w;
-    if(total===0) return;
-    let yCursor = top + plot;
-    const dH = (b.d/max) * plot;
-    const wH = (b.w/max) * plot;
-    if(b.d>0){
-      yCursor -= dH;
-      svg+=`<rect x="${x}" y="${yCursor}" width="${w}" height="${dH}" class="chart-bar-d"><title>${b.year}年: 侵犯${b.d}</title></rect>`;
-    }
+    const cx = xOf(i);
     if(b.w>0){
-      yCursor -= wH;
-      svg+=`<rect x="${x}" y="${yCursor}" width="${w}" height="${wH}" class="chart-bar-w"><title>${b.year}年: 警戒${b.w}</title></rect>`;
+      const cy = yOf(b.w);
+      svg+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.2" class="chart-dot-w"><title>${b.year}年: 警戒${b.w}</title></circle>`;
+    }
+    if(b.d>0){
+      const cy = yOf(b.d);
+      svg+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.2" class="chart-dot-d"><title>${b.year}年: 侵犯${b.d}</title></circle>`;
     }
   });
 
@@ -1437,8 +1448,7 @@ function renderChart(){
   const skip = bins.length>8 ? 2 : 1;
   bins.forEach((b,i)=>{
     if(i%skip!==0) return;
-    const x = i*barW + barW/2;
-    svg+=`<text x="${x}" y="${H-5}" text-anchor="middle" class="chart-tick">${b.year}</text>`;
+    svg+=`<text x="${xOf(i).toFixed(1)}" y="${H-5}" text-anchor="middle" class="chart-tick">${b.year}</text>`;
   });
 
   svg+=`</svg>`;
