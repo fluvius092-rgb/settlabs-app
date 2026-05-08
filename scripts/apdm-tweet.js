@@ -12,6 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const POSTED_FILE = path.join(__dirname, '..', 'data', 'apdm-posted.json');
 const APDM_URL = 'https://settlabs.app/api/claude';
 const X_API_URL = 'https://api.twitter.com/2/tweets';
+const X_MEDIA_URL = 'https://upload.twitter.com/1.1/media/upload.json';
 const MAX_TWEETS_PER_RUN = 3;
 
 // ─── APDM API ───
@@ -226,9 +227,61 @@ function buildOAuthHeader(method, url, body) {
   return header;
 }
 
-async function postTweet(text) {
-  const body = JSON.stringify({ text });
-  const authHeader = buildOAuthHeader('POST', X_API_URL, body);
+async function fetchMapImage(lat, lng) {
+  const apiKey = process.env.GEOAPIFY_KEY;
+  if (!apiKey) return null;
+
+  const markerColor = '%23f85149';
+  const url = `https://maps.geoapify.com/v1/staticmap`
+    + `?style=dark-matter`
+    + `&width=800&height=400`
+    + `&center=lonlat:${lng},${lat}`
+    + `&zoom=5`
+    + `&marker=lonlat:${lng},${lat};color:${markerColor};size:large`
+    + `&apiKey=${apiKey}`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    console.warn(`Map image fetch failed: ${res.status}`);
+    return null;
+  }
+  const buf = await res.arrayBuffer();
+  return Buffer.from(buf);
+}
+
+async function uploadMedia(imageBuffer) {
+  const base64 = imageBuffer.toString('base64');
+
+  const boundary = '----FormBoundary' + crypto.randomBytes(8).toString('hex');
+  const body = `--${boundary}\r\nContent-Disposition: form-data; name="media_data"\r\n\r\n${base64}\r\n--${boundary}--\r\n`;
+
+  const authHeader = buildOAuthHeader('POST', X_MEDIA_URL);
+
+  const res = await fetch(X_MEDIA_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: authHeader,
+      'Content-Type': `multipart/form-data; boundary=${boundary}`,
+    },
+    body,
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Media upload ${res.status}: ${err}`);
+  }
+
+  const data = await res.json();
+  return data.media_id_string;
+}
+
+async function postTweet(text, mediaId) {
+  const payload = { text };
+  if (mediaId) {
+    payload.media = { media_ids: [mediaId] };
+  }
+  const body = JSON.stringify(payload);
+  const authHeader = buildOAuthHeader('POST', X_API_URL);
 
   const res = await fetch(X_API_URL, {
     method: 'POST',
@@ -323,7 +376,16 @@ async function main() {
     const text = buildTweetText(inc);
     console.log(`ツイート投稿: ${inc.title}`);
     try {
-      const result = await postTweet(text);
+      let mediaId = null;
+      if (typeof inc.lat === 'number' && typeof inc.lng === 'number') {
+        console.log(`  マップ画像生成: ${inc.lat}, ${inc.lng}`);
+        const mapImage = await fetchMapImage(inc.lat, inc.lng);
+        if (mapImage) {
+          mediaId = await uploadMedia(mapImage);
+          console.log(`  → 画像アップロード完了 (media_id: ${mediaId})`);
+        }
+      }
+      const result = await postTweet(text, mediaId);
       console.log(`  → 成功 (id: ${result.data?.id})`);
       posted.keys.push(incKey(inc));
       successCount++;
