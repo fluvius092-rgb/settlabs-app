@@ -4,6 +4,7 @@
 // ルート: /contract_reader/[[path]] → basePath 込みで Vercel に転送
 
 const VERCEL_ORIGIN = 'https://contract-reader-qv4c.vercel.app'
+const ADSENSE_TAG = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7502065458216315" crossorigin="anonymous"></script>'
 
 // Cloudflare 固有ヘッダー（Vercel に転送しない）
 const CF_SKIP_HEADERS = new Set([
@@ -45,7 +46,24 @@ export async function onRequest({ request, params }) {
 
   const response = await fetch(proxyReq)
 
-  // レスポンスをそのまま返す（ストリーミング対応）
+  const contentType = response.headers.get('content-type') || ''
+  const isText = contentType.includes('text/html') || contentType.includes('application/json')
+  if (isText) {
+    let body = await response.text()
+    body = body.replaceAll('契約書かんたん読み', '契約書かんたん要約')
+    if (contentType.includes('text/html')) {
+      body = body.replace('href="/manifest.json"', 'href="/contract_reader/manifest.json"')
+      body = body.replace('</head>', ADSENSE_TAG + '</head>')
+    }
+    const newHeaders = new Headers(response.headers)
+    newHeaders.delete('content-length')
+    return new Response(body, {
+      status:     response.status,
+      statusText: response.statusText,
+      headers:    newHeaders,
+    })
+  }
+
   return new Response(response.body, {
     status:     response.status,
     statusText: response.statusText,

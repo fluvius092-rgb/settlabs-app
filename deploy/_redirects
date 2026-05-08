@@ -1,0 +1,4 @@
+
+# IADM/JADM rebranded to APDM (2026-05)
+/jadm        /apdm/  301
+/jadm/*      /apdm/:splat  301
