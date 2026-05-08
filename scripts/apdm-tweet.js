@@ -227,11 +227,13 @@ function buildOAuthHeader(method, url, body) {
   return header;
 }
 
-async function fetchMapImage(lat, lng) {
+const MARKER_COLORS = { danger: '%23f85149', warning: '%23d29922', info: '%232f81f7' };
+
+async function fetchMapImage(lat, lng, level) {
   const apiKey = process.env.GEOAPIFY_KEY;
   if (!apiKey) return null;
 
-  const markerColor = '%23f85149';
+  const markerColor = MARKER_COLORS[level] || MARKER_COLORS.danger;
   const url = `https://maps.geoapify.com/v1/staticmap`
     + `?style=dark-matter`
     + `&width=800&height=400`
@@ -379,7 +381,7 @@ async function main() {
       let mediaId = null;
       if (typeof inc.lat === 'number' && typeof inc.lng === 'number') {
         console.log(`  マップ画像生成: ${inc.lat}, ${inc.lng}`);
-        const mapImage = await fetchMapImage(inc.lat, inc.lng);
+        const mapImage = await fetchMapImage(inc.lat, inc.lng, inc.level);
         if (mapImage) {
           mediaId = await uploadMedia(mapImage);
           console.log(`  → 画像アップロード完了 (media_id: ${mediaId})`);
