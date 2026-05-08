@@ -1438,8 +1438,9 @@ window.addEventListener('load', () => {
   const savedLang = localStorage.getItem('apdm_lang') || 'ja';
   setLang(savedLang);
 
-  // Restore time range
-  const savedTime = localStorage.getItem('apdm_time') || 'all';
+  // Restore time range — DEMO は履歴データなので '1d' だとほぼ0件 → 'all' を初期値に強制
+  let savedTime = localStorage.getItem('apdm_time') || 'all';
+  if(savedTime === '1d') savedTime = 'all';  // 旧設定マイグレーション
   filterByTime(savedTime);
 
   // 常にサーバープロキシ経由でLIVE化
