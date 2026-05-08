@@ -123,7 +123,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .inc-marker .impact{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(var(--ms,1));font-family:var(--mono);font-weight:bold;font-size:14px;text-shadow:0 0 4px currentColor;pointer-events:none;}
 .inc-marker.recent .core,.inc-marker.recent .ring,.inc-marker.recent .tri{animation:slow-blink 3s ease-in-out infinite;}
 @keyframes slow-blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+.inc-marker.dim{filter:grayscale(1);opacity:0.35;}
+.inc-marker.dim .pulse,.inc-marker.dim .core,.inc-marker.dim .ring,.inc-marker.dim .cross,.inc-marker.dim .tri,.inc-marker.dim .impact{animation:none !important;}
 .missile-arc{animation:dashflow 4s linear infinite;filter:drop-shadow(0 0 3px currentColor);}
+.missile-arc.dim{filter:grayscale(1);opacity:0.25;animation:none;}
 .missile-arc-cruise{animation-duration:2.5s;}
 @keyframes dashflow{from{stroke-dashoffset:0;}to{stroke-dashoffset:-40;}}
 .mu{position:absolute;top:12px;right:12px;background:rgba(22,27,34,.92);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;font-family:var(--mono);font-size:10px;color:var(--text-muted);backdrop-filter:blur(8px);z-index:1100;line-height:1.8;}
@@ -716,6 +719,8 @@ function renderMap(){
               : inc.level==='danger' ? '#f85149'
               : inc.level==='warning' ? '#d29922' : '#2f81f7';
     const isSel = selId === inc.id;
+    const isDim = selId !== null && !isSel;
+    const dimCls = isDim ? ' dim' : '';
     const incDate = parseDate(inc.datetime);
     const isRecent = incDate && (_now - incDate.getTime()) < _7d;
     const recentCls = isRecent ? ' recent' : '';
@@ -723,7 +728,7 @@ function renderMap(){
 
     if(isMissile){
       const html = `<div class="pulse" style="border-color:${col}"></div><div class="tri" style="border-bottom-color:${col};filter:drop-shadow(0 0 6px ${col})"></div>`;
-      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':'')+recentCls, html, iconSize:[40,40], iconAnchor:[20,20]});
+      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':'')+dimCls+recentCls, html, iconSize:[40,40], iconAnchor:[20,20]});
       const m = L.marker([inc.lat,inc.lng],{icon}).addTo(_incidentLayer);
       m.on('click', ()=>selectInc(inc.id));
       m.bindTooltip(tipHTML, {direction:'top', offset:[0,-8]});
@@ -733,16 +738,17 @@ function renderMap(){
         const arc = bezierArc([inc.lat,inc.lng],[inc.landLat,inc.landLng], lift);
         const arcDash = isCruise ? '2,4' : '8,5';
         const arcWeight = isCruise ? 1.4 : 2.2;
-        const poly = L.polyline(arc, {color:col, weight:arcWeight, dashArray:arcDash, opacity:0.85, interactive:true, bubblingMouseEvents:false}).addTo(_incidentLayer);
+        const poly = L.polyline(arc, {color:col, weight:arcWeight, dashArray:arcDash, opacity:isDim?0.25:0.85, interactive:true, bubblingMouseEvents:false}).addTo(_incidentLayer);
         poly.on('click', ()=>selectInc(inc.id));
         poly.bindTooltip(tipHTML, {sticky:true});
         const pathEl = poly.getElement();
         if(pathEl){
           pathEl.classList.add('missile-arc');
           if(isCruise) pathEl.classList.add('missile-arc-cruise');
+          if(isDim) pathEl.classList.add('dim');
           pathEl.style.cursor='pointer';
         }
-        const impactIcon = L.divIcon({className:'inc-marker', html:`<div class="impact" style="color:${col};cursor:pointer">✕</div>`, iconSize:[20,20], iconAnchor:[10,10]});
+        const impactIcon = L.divIcon({className:'inc-marker'+dimCls, html:`<div class="impact" style="color:${col};cursor:pointer">✕</div>`, iconSize:[20,20], iconAnchor:[10,10]});
         const impactM = L.marker([inc.landLat,inc.landLng],{icon:impactIcon}).addTo(_incidentLayer);
         impactM.on('click', ()=>selectInc(inc.id));
         impactM.bindTooltip(tipHTML, {direction:'top', offset:[0,-8]});
@@ -750,7 +756,7 @@ function renderMap(){
     } else {
       const crossHTML = inc.level==='danger' ? `<div class="cross" style="color:${col}"></div>` : '';
       const html = `<div class="pulse" style="border-color:${col}"></div>${crossHTML}<div class="ring" style="border-color:${col}"></div><div class="core" style="background:${col};box-shadow:0 0 10px ${col}"></div>`;
-      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':'')+recentCls, html, iconSize:[40,40], iconAnchor:[20,20]});
+      const icon = L.divIcon({className:'inc-marker'+(isSel?' sel':'')+dimCls+recentCls, html, iconSize:[40,40], iconAnchor:[20,20]});
       const m = L.marker([inc.lat,inc.lng],{icon}).addTo(_incidentLayer);
       m.on('click', ()=>selectInc(inc.id));
       m.bindTooltip(tipHTML, {direction:'top', offset:[0,-8]});
