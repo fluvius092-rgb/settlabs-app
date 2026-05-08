@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://unpkg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com; connect-src 'self' https://api.anthropic.com https://api.currentsapi.services https://settlabs.app https://cloudflareinsights.com; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://unpkg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com; connect-src 'self' https://settlabs.app https://cloudflareinsights.com; base-uri 'self'; form-action 'none'">
 <title>APDM — Asia-Pacific Defense Monitor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -376,7 +376,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 <script>
 // ══════════════════════════ STATE ══════════════════════════
 let incidents = [], selId = null, curFilter = 'all', curRegion = 'all', curTimeRange = '1d';
-let apiKeys = { anthropic:'', currents:'' };
+let apiKeys = { anthropic:'proxy' };
 let isDemo = false, cntTimer = null, countdown = 86400;
 // ══════════════════════════ MAP STATE ══════════════════════════
 let _map = null, _incidentLayer = null;
@@ -976,8 +976,7 @@ async function fetchAll(forceRefresh=false){
     setStep(t('loading_claude'));
     const cd=await fetchClaude();
     let nd=[];
-    if(apiKeys.currents){setStep(t('loading_currents'));nd=await fetchCurrents();}
-    const merged=dedupIncidents([...cd, ...nd]);
+    const merged=dedupIncidents([...cd]);
     saveCache(merged);
     const prevIds=new Set((loadCache()?.ids)||[]);
     mergeIncidents(merged, [...prevIds]);
@@ -1004,9 +1003,6 @@ function mergeIncidents(fetched, prevKeys){
   incidents=dedupIncidents([...live, ...DEMO]);
   renderAll(); updateTicker();
 }
-
-// プロキシモード判定: APIキーが "proxy" の場合は /api/claude 経由（Cloudflare Pages Functions）
-function isProxyMode(){return apiKeys.anthropic==='proxy';}
 
 async function fetchClaude(){
   const today=new Date().toISOString().slice(0,10);
@@ -1074,15 +1070,7 @@ G. 中露共同爆撃機合同飛行・海軍合同演習
     tools:[{type:'web_search_20250305',name:'web_search',max_uses:4}],
     messages:[{role:'user',content:prompt}]
   });
-  const proxy=isProxyMode();
-  const url=proxy?'/api/claude':'https://api.anthropic.com/v1/messages';
-  const headers=proxy?{'Content-Type':'application/json'}:{
-    'Content-Type':'application/json',
-    'x-api-key': apiKeys.anthropic,
-    'anthropic-version': '2023-06-01',
-    'anthropic-dangerous-direct-browser-access': 'true'
-  };
-  const res=await fetch(url,{method:'POST',headers,body});
+  const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body});
   if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(`Claude API ${res.status}: ${e.error?.message||'Unknown'}`);}
   const data=await res.json();
   if(!data.content || !Array.isArray(data.content)){console.warn('Unexpected response shape',data);return [];}
@@ -1104,20 +1092,6 @@ G. 中露共同爆撃機合同飛行・海軍合同演習
   return [];
 }
 
-async function fetchCurrents(){
-  const results=[];
-  for(const kw of['スクランブル 領空侵犯','領海侵入 尖閣']){
-    try{
-      const r=await fetch(`https://api.currentsapi.services/v1/search?keywords=${encodeURIComponent(kw)}&language=jp&apiKey=${apiKeys.currents}`);
-      if(!r.ok)continue;
-      const d=await r.json();
-      (d.news||[]).slice(0,3).forEach((a,i)=>{
-        results.push({id:Date.now()+i,level:'info',zone:a.title.includes('領空')?'air':a.title.includes('領海')?'sea':'eez',title:'ニュース',country:'—',asset:'—',location:'記事参照',lat:35+(Math.random()-.5)*8,lng:135+(Math.random()-.5)*12,datetime:a.published?.slice(0,16)||'—',action:'—',detail:a.description||a.title,source:a.url,ds:'n',url:a.url});
-      });
-    }catch(e){console.warn(e);}
-  }
-  return results;
-}
 
 function loadDemo(){
   // 実日付の過去事案。datetimeはDEMO定義のものを保持。
@@ -1355,8 +1329,9 @@ function clearSel(){selId=null;renderList();renderMap();document.getElementById(
 
 function showLineInfo(title, loc, midLatLng, color){
   selId=null; renderList(); renderMap();
-  const html=`<div class="df"><div class="dk">${t('dk_status')}</div><div><span class="ltag" style="color:${color};border-color:${color};background:${color}22">${t('li_tag_boundary')}</span></div></div>
-<div class="df"><div class="dk">${t('li_name')}</div><div class="dv" style="color:${color}">${esc(title)}</div></div>
+  const safeColor=/^#[0-9a-fA-F]{3,8}$/.test(color)?color:'#888';
+  const html=`<div class="df"><div class="dk">${t('dk_status')}</div><div><span class="ltag" style="color:${safeColor};border-color:${safeColor};background:${safeColor}22">${t('li_tag_boundary')}</span></div></div>
+<div class="df"><div class="dk">${t('li_name')}</div><div class="dv" style="color:${safeColor}">${esc(title)}</div></div>
 <div class="df"><div class="dk">${t('dk_location')}</div><div class="dv">${esc(loc)}</div></div>
 <div class="df"><div class="dk">${t('li_center')}</div><div class="dv mono">${midLatLng[0].toFixed(2)}°N, ${midLatLng[1].toFixed(2)}°E</div></div>
 <hr class="ddiv">
@@ -1444,7 +1419,7 @@ window.addEventListener('load', () => {
   filterByTime(savedTime);
 
   // 常にサーバープロキシ経由でLIVE化
-  apiKeys = {anthropic:'proxy', currents:''};
+  apiKeys = {anthropic:'proxy'};
   loadDemo();    // まず DEMO を即表示
   fetchAll();    // 並行で API 取得（取得後 DEMO とマージされる）
 });
