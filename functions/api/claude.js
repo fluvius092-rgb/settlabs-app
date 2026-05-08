@@ -1,15 +1,13 @@
 // Cloudflare Pages Function: /api/claude
 // Anthropic Messages API への認証付きプロキシ + 24hサーバー側キャッシュ
-//
-// 環境変数:
-//   ANTHROPIC_KEY (必須・暗号化)  — Anthropic API キー
-// KV バインド (任意):
-//   CACHE  — レスポンスキャッシュ（推奨：DAU増加でも料金一定）
-//   RL     — IP単位レート制限（1時間5回）
 
 const RATE_LIMIT_PER_HOUR = 30;
 const CACHE_TTL_SEC = 24 * 3600;
 const ALLOWED_MODELS = ['claude-sonnet-4-6', 'claude-haiku-4-5-20251001'];
+const ALLOWED_ORIGINS = ['https://settlabs.app', 'https://www.settlabs.app'];
+const MAX_TOOLS = 1;
+const MAX_TOOL_USES = 6;
+const MAX_MESSAGE_LENGTH = 5000;
 
 async function bodyHash(text) {
   const data = new TextEncoder().encode(text);
@@ -29,6 +27,13 @@ function jsonError(status, message) {
 
 export async function onRequestPost(context) {
   const { request, env } = context;
+
+  // オリジン検証
+  const origin = request.headers.get('origin') || '';
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    return jsonError(403, 'Forbidden');
+  }
+
   const ip = request.headers.get('cf-connecting-ip') || 'unknown';
 
   // ペイロード読込・検証
@@ -50,6 +55,24 @@ export async function onRequestPost(context) {
   }
   payload.max_tokens = Math.min(payload.max_tokens || 4000, 8000);
 
+  // messages 長さ制限
+  const msgText = JSON.stringify(payload.messages || []);
+  if (msgText.length > MAX_MESSAGE_LENGTH) {
+    return jsonError(400, 'Message too long');
+  }
+
+  // tools 制限
+  if (Array.isArray(payload.tools)) {
+    if (payload.tools.length > MAX_TOOLS) {
+      return jsonError(400, 'Too many tools');
+    }
+    for (const tool of payload.tools) {
+      if (tool.max_uses && tool.max_uses > MAX_TOOL_USES) {
+        tool.max_uses = MAX_TOOL_USES;
+      }
+    }
+  }
+
   // 検証後のbodyで安定したcache keyを作成
   const sanitizedBody = JSON.stringify(payload);
   const hash = await bodyHash(sanitizedBody);
@@ -63,8 +86,8 @@ export async function onRequestPost(context) {
         status: 200,
         headers: {
           'content-type': 'application/json',
-          'x-cache': 'HIT',
           'cache-control': 'no-store',
+          'access-control-allow-origin': origin || ALLOWED_ORIGINS[0],
         },
       });
     }
@@ -81,7 +104,7 @@ export async function onRequestPost(context) {
   }
 
   if (!env.ANTHROPIC_KEY) {
-    return jsonError(500, 'ANTHROPIC_KEY not configured on server');
+    return jsonError(500, 'Internal server error');
   }
 
   // 上流呼び出し
@@ -111,8 +134,8 @@ export async function onRequestPost(context) {
     status: upstream.status,
     headers: {
       'content-type': 'application/json',
-      'x-cache': upstream.ok ? 'MISS' : 'BYPASS',
       'cache-control': 'no-store',
+      'access-control-allow-origin': origin || ALLOWED_ORIGINS[0],
     },
   });
 }

@@ -137,6 +137,23 @@ async function fetchIncidents() {
   return [];
 }
 
+const VALID_LEVELS = new Set(['danger', 'warning', 'info']);
+const VALID_ZONES = new Set(['air', 'sea', 'eez', 'missile']);
+const VALID_COUNTRIES = new Set(['中国', 'ロシア', '北朝鮮', '中国・ロシア']);
+
+function validateIncident(inc) {
+  if (!inc || typeof inc !== 'object') return false;
+  if (typeof inc.title !== 'string' || inc.title.length === 0 || inc.title.length > 60) return false;
+  if (!VALID_LEVELS.has(inc.level)) return false;
+  if (!VALID_ZONES.has(inc.zone)) return false;
+  if (!VALID_COUNTRIES.has(inc.country)) return false;
+  if (typeof inc.location !== 'string' || inc.location.length > 100) return false;
+  if (typeof inc.detail !== 'string' || inc.detail.length > 300) return false;
+  if (typeof inc.datetime !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(inc.datetime)) return false;
+  if (typeof inc.lat !== 'number' || typeof inc.lng !== 'number') return false;
+  return true;
+}
+
 // ─── 投稿済みトラッキング ───
 
 function incKey(inc) {
@@ -266,8 +283,9 @@ async function main() {
   console.log('APDM Tweet Bot: 開始');
 
   console.log('事案を取得中...');
-  const incidents = await fetchIncidents();
-  console.log(`取得件数: ${incidents.length}`);
+  const rawIncidents = await fetchIncidents();
+  const incidents = rawIncidents.filter(validateIncident);
+  console.log(`取得件数: ${rawIncidents.length} (検証通過: ${incidents.length})`);
 
   if (incidents.length === 0) {
     console.log('事案なし — 終了');
