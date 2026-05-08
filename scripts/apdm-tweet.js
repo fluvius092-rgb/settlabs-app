@@ -277,9 +277,11 @@ async function main() {
   const posted = loadPosted();
   const postedSet = new Set(posted.keys);
 
+  const today = new Date().toISOString().slice(0, 10);
   const newIncidents = incidents.filter((inc) => {
     const key = incKey(inc);
-    return key.replace(/\|/g, '').trim() && !postedSet.has(key);
+    const incDate = (inc.datetime || '').slice(0, 10);
+    return key.replace(/\|/g, '').trim() && !postedSet.has(key) && incDate === today;
   });
 
   console.log(`新規事案: ${newIncidents.length}件`);
