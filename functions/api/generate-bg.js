@@ -28,29 +28,40 @@ function jsonOk(payload) {
   });
 }
 
-async function generateWithFlux(env, prompt) {
-  const res = await fetch('https://api.together.xyz/v1/images/generations', {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${env.TOGETHER_API_KEY}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: TOGETHER_MODEL,
-      prompt,
-      width: IMAGE_WIDTH,
-      height: IMAGE_HEIGHT,
-      steps: 4,
-      n: 1,
-      response_format: 'url',
-    }),
-  });
+async function generateWithFlux(env, prompt, diag) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 25000);
+  diag.push('flux:fetch:start');
+  let res;
+  try {
+    res = await fetch('https://api.together.xyz/v1/images/generations', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${env.TOGETHER_API_KEY}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: TOGETHER_MODEL,
+        prompt,
+        width: IMAGE_WIDTH,
+        height: IMAGE_HEIGHT,
+        steps: 4,
+        n: 1,
+        response_format: 'url',
+      }),
+      signal: ctrl.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+  diag.push(`flux:fetch:status:${res.status}`);
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`Together.ai error (${res.status}): ${text}`);
+    throw new Error(`Together.ai error (${res.status}): ${text.slice(0, 300)}`);
   }
   const data = await res.json();
+  diag.push('flux:json:parsed');
   const url = data?.data?.[0]?.url;
   if (!url) throw new Error('Together.ai returned no image URL');
   return url;
@@ -92,9 +103,14 @@ async function generateWithGemini(env, prompt, selfieBase64) {
 }
 
 export async function onRequestPost(context) {
+  const diag = [];
   try {
+    diag.push('start');
     const { request, env } = context;
     const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+    diag.push(`ip:${ip.slice(0, 8)}`);
+    diag.push(`hasKey:${env.TOGETHER_API_KEY ? 'y' : 'n'}`);
+    diag.push(`hasKV:${env.APDM_RL ? 'y' : 'n'}`);
 
     let payload;
     try {
@@ -150,8 +166,9 @@ export async function onRequestPost(context) {
       if (debug) {
         imageUrl =
           'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=768&h=1344&fit=crop';
+        diag.push('debug:returned');
       } else if (mode === 'side-by-side') {
-        imageUrl = await generateWithFlux(env, prompt);
+        imageUrl = await generateWithFlux(env, prompt, diag);
       } else {
         imageBase64 = await generateWithGemini(env, prompt, selfie);
       }
@@ -164,15 +181,16 @@ export async function onRequestPost(context) {
         imageUrl,
         imageBase64,
         debug: debug || undefined,
+        diag,
         generatedAt: Date.now(),
       });
     } catch (err) {
       console.error('Upstream error', err?.message, err?.stack);
-      return jsonError(502, `Upstream: ${err?.message || 'unknown'}`);
+      return jsonError(502, `Upstream: ${err?.message || 'unknown'} | diag: ${diag.join(',')}`);
     }
   } catch (fatal) {
     console.error('Fatal handler error', fatal?.message, fatal?.stack);
-    return jsonError(500, `Fatal: ${fatal?.message || 'unknown'}`);
+    return jsonError(500, `Fatal: ${fatal?.message || 'unknown'} | diag: ${diag.join(',')}`);
   }
 }
 
