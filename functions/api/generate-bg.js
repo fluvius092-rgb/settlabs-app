@@ -42,7 +42,7 @@ async function generateWithFlux(env, prompt) {
       height: IMAGE_HEIGHT,
       steps: 4,
       n: 1,
-      response_format: 'b64_json',
+      response_format: 'url',
     }),
   });
 
@@ -51,9 +51,9 @@ async function generateWithFlux(env, prompt) {
     throw new Error(`Together.ai error (${res.status}): ${text}`);
   }
   const data = await res.json();
-  const b64 = data?.data?.[0]?.b64_json;
-  if (!b64) throw new Error('Together.ai returned no image');
-  return b64;
+  const url = data?.data?.[0]?.url;
+  if (!url) throw new Error('Together.ai returned no image URL');
+  return url;
 }
 
 async function generateWithGemini(env, prompt, selfieBase64) {
@@ -142,16 +142,20 @@ export async function onRequestPost(context) {
     }
 
     try {
-      const imageBase64 =
-        mode === 'side-by-side'
-          ? await generateWithFlux(env, prompt)
-          : await generateWithGemini(env, prompt, selfie);
+      let imageUrl = null;
+      let imageBase64 = null;
+      if (mode === 'side-by-side') {
+        imageUrl = await generateWithFlux(env, prompt);
+      } else {
+        imageBase64 = await generateWithGemini(env, prompt, selfie);
+      }
 
       return jsonOk({
         id: crypto.randomUUID(),
         category,
         mode,
         prompt,
+        imageUrl,
         imageBase64,
         generatedAt: Date.now(),
       });
