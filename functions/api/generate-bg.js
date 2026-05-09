@@ -7,9 +7,54 @@ const RATE_LIMIT_PER_DAY = 30;
 const MAX_PROMPT_LENGTH = 800;
 const MAX_SELFIE_BYTES = 4 * 1024 * 1024;
 const TOGETHER_MODEL = 'black-forest-labs/FLUX.1-schnell';
+const TOGETHER_TRANSLATE_MODEL = 'meta-llama/Llama-3.2-3B-Instruct-Turbo';
 const GEMINI_MODEL = 'gemini-2.5-flash-image';
 const IMAGE_WIDTH = 768;
 const IMAGE_HEIGHT = 1344;
+
+const JAPANESE_RE = /[぀-ゟ゠-ヿ一-鿿]/;
+
+async function translateMixedPrompt(env, prompt, diag) {
+  if (!JAPANESE_RE.test(prompt)) return prompt;
+  diag.push('translate:start');
+  try {
+    const res = await fetch('https://api.together.xyz/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${env.TOGETHER_API_KEY}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: TOGETHER_TRANSLATE_MODEL,
+        messages: [
+          {
+            role: 'system',
+            content:
+              'You are a translator for image generation prompts. Input may mix English and Japanese. Translate any Japanese phrases into concise natural English suitable for image generation. Keep all English parts unchanged. Preserve commas and overall structure. Output ONLY the translated prompt, no quotes, no explanations.',
+          },
+          { role: 'user', content: prompt },
+        ],
+        max_tokens: 240,
+        temperature: 0.2,
+      }),
+    });
+    if (!res.ok) {
+      diag.push(`translate:fail:${res.status}`);
+      return prompt;
+    }
+    const data = await res.json();
+    const translated = data?.choices?.[0]?.message?.content?.trim();
+    if (!translated) {
+      diag.push('translate:empty');
+      return prompt;
+    }
+    diag.push('translate:ok');
+    return translated;
+  } catch (e) {
+    diag.push(`translate:err:${e?.message?.slice(0, 40) || 'unknown'}`);
+    return prompt;
+  }
+}
 
 function jsonError(status, message) {
   return new Response(JSON.stringify({ error: { message } }), {
@@ -168,7 +213,8 @@ export async function onRequestPost(context) {
           'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=768&h=1344&fit=crop';
         diag.push('debug:returned');
       } else if (mode === 'side-by-side') {
-        imageUrl = await generateWithFlux(env, prompt, diag);
+        const finalPrompt = await translateMixedPrompt(env, prompt, diag);
+        imageUrl = await generateWithFlux(env, finalPrompt, diag);
       } else {
         imageBase64 = await generateWithGemini(env, prompt, selfie);
       }
