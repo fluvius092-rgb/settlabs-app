@@ -3,7 +3,7 @@
 // mode=side-by-side: Together.ai Flux Schnell でテキスト→画像を生成
 // mode=composite:    Gemini 2.5 Flash Image で selfie + prompt から合成生成
 
-const RATE_LIMIT_PER_DAY = 30;
+const RATE_LIMIT_PER_DAY = 100;
 const MAX_PROMPT_LENGTH = 800;
 const MAX_SELFIE_BYTES = 4 * 1024 * 1024;
 const TOGETHER_MODEL = 'black-forest-labs/FLUX.1-schnell';
