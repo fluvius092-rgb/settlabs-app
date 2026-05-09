@@ -6,7 +6,7 @@
 const RATE_LIMIT_PER_DAY = 30;
 const MAX_PROMPT_LENGTH = 800;
 const MAX_SELFIE_BYTES = 4 * 1024 * 1024;
-const TOGETHER_MODEL = 'black-forest-labs/FLUX.1-schnell-Free';
+const TOGETHER_MODEL = 'black-forest-labs/FLUX.1-schnell';
 const GEMINI_MODEL = 'gemini-2.5-flash-image';
 const IMAGE_WIDTH = 768;
 const IMAGE_HEIGHT = 1344;
