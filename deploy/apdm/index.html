@@ -757,6 +757,9 @@ function initMap(){
     maxZoom: 19,
   }).addTo(_map);
 
+  // 地図の空白クリックで選択解除（マーカー・ポリラインのクリックは propagation 停止済み）
+  _map.on('click', () => { if(selId !== null) clearSel(); });
+
   // 国名ラベル（県・州レベルは表示しない）
   const COUNTRIES = [
     {name:'日本', lat:36.5, lng:138.2},
