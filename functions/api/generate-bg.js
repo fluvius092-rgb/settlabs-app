@@ -92,61 +92,76 @@ async function generateWithGemini(env, prompt, selfieBase64) {
 }
 
 export async function onRequestPost(context) {
-  const { request, env } = context;
-  const ip = request.headers.get('cf-connecting-ip') || 'unknown';
-
-  let payload;
   try {
-    payload = await request.json();
-  } catch {
-    return jsonError(400, 'Invalid JSON');
-  }
+    const { request, env } = context;
+    const ip = request.headers.get('cf-connecting-ip') || 'unknown';
 
-  const { category, prompt, mode, selfie } = payload;
-  if (typeof prompt !== 'string' || prompt.length === 0 || prompt.length > MAX_PROMPT_LENGTH) {
-    return jsonError(400, 'Invalid prompt');
-  }
-  if (mode !== 'side-by-side' && mode !== 'composite') {
-    return jsonError(400, 'Invalid mode');
-  }
-  if (mode === 'composite') {
-    if (typeof selfie !== 'string' || selfie.length === 0) {
-      return jsonError(400, 'composite mode requires selfie');
-    }
-    if (selfie.length > MAX_SELFIE_BYTES) {
-      return jsonError(413, 'Selfie too large');
-    }
-  }
-
-  if (env.APDM_RL) {
-    const rlKey = `noreal-bg:${ip}:${new Date().toISOString().slice(0, 10)}`;
-    const cnt = parseInt((await env.APDM_RL.get(rlKey)) || '0', 10);
-    if (cnt >= RATE_LIMIT_PER_DAY) {
-      return jsonError(429, 'Daily generation limit reached');
-    }
-    await env.APDM_RL.put(rlKey, String(cnt + 1), { expirationTtl: 86400 + 300 });
-  }
-
-  try {
-    let imageBase64;
-    if (mode === 'side-by-side') {
-      if (!env.TOGETHER_API_KEY) return jsonError(500, 'TOGETHER_API_KEY missing');
-      imageBase64 = await generateWithFlux(env, prompt);
-    } else {
-      if (!env.GEMINI_API_KEY) return jsonError(500, 'GEMINI_API_KEY missing');
-      imageBase64 = await generateWithGemini(env, prompt, selfie);
+    let payload;
+    try {
+      payload = await request.json();
+    } catch {
+      return jsonError(400, 'Invalid JSON');
     }
 
-    return jsonOk({
-      id: crypto.randomUUID(),
-      category,
-      mode,
-      prompt,
-      imageBase64,
-      generatedAt: Date.now(),
-    });
-  } catch (err) {
-    return jsonError(502, err?.message || 'Upstream error');
+    const { category, prompt, mode, selfie } = payload;
+    if (typeof prompt !== 'string' || prompt.length === 0 || prompt.length > MAX_PROMPT_LENGTH) {
+      return jsonError(400, 'Invalid prompt');
+    }
+    if (mode !== 'side-by-side' && mode !== 'composite') {
+      return jsonError(400, 'Invalid mode');
+    }
+    if (mode === 'composite') {
+      if (typeof selfie !== 'string' || selfie.length === 0) {
+        return jsonError(400, 'composite mode requires selfie');
+      }
+      if (selfie.length > MAX_SELFIE_BYTES) {
+        return jsonError(413, 'Selfie too large');
+      }
+    }
+
+    if (mode === 'side-by-side' && !env.TOGETHER_API_KEY) {
+      return jsonError(500, 'TOGETHER_API_KEY missing');
+    }
+    if (mode === 'composite' && !env.GEMINI_API_KEY) {
+      return jsonError(500, 'GEMINI_API_KEY missing');
+    }
+
+    try {
+      if (env.APDM_RL) {
+        const rlKey = `noreal-bg:${ip}:${new Date().toISOString().slice(0, 10)}`;
+        const cnt = parseInt((await env.APDM_RL.get(rlKey)) || '0', 10);
+        if (cnt >= RATE_LIMIT_PER_DAY) {
+          return jsonError(429, 'Daily generation limit reached');
+        }
+        context.waitUntil(
+          env.APDM_RL.put(rlKey, String(cnt + 1), { expirationTtl: 86400 + 300 }),
+        );
+      }
+    } catch (kvErr) {
+      console.error('KV error', kvErr);
+    }
+
+    try {
+      const imageBase64 =
+        mode === 'side-by-side'
+          ? await generateWithFlux(env, prompt)
+          : await generateWithGemini(env, prompt, selfie);
+
+      return jsonOk({
+        id: crypto.randomUUID(),
+        category,
+        mode,
+        prompt,
+        imageBase64,
+        generatedAt: Date.now(),
+      });
+    } catch (err) {
+      console.error('Upstream error', err?.message, err?.stack);
+      return jsonError(502, err?.message || 'Upstream error');
+    }
+  } catch (fatal) {
+    console.error('Fatal handler error', fatal?.message, fatal?.stack);
+    return jsonError(500, `Fatal: ${fatal?.message || 'unknown'}`);
   }
 }
 
