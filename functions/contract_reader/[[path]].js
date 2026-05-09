@@ -3,7 +3,7 @@
 //
 // ルート: /contract_reader/[[path]] → basePath 込みで Vercel に転送
 
-const VERCEL_ORIGIN = 'https://contract-reader-qv4c.vercel.app'
+const VERCEL_ORIGIN = 'https://contract-reader-plum.vercel.app'
 const ADSENSE_TAG = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7502065458216315" crossorigin="anonymous"></script>'
 
 // Cloudflare 固有ヘッダー（Vercel に転送しない）
