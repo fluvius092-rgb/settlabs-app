@@ -141,10 +141,16 @@ export async function onRequestPost(context) {
       console.error('KV error', kvErr);
     }
 
+    const url = new URL(request.url);
+    const debug = url.searchParams.get('debug') === '1';
+
     try {
       let imageUrl = null;
       let imageBase64 = null;
-      if (mode === 'side-by-side') {
+      if (debug) {
+        imageUrl =
+          'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=768&h=1344&fit=crop';
+      } else if (mode === 'side-by-side') {
         imageUrl = await generateWithFlux(env, prompt);
       } else {
         imageBase64 = await generateWithGemini(env, prompt, selfie);
@@ -157,11 +163,12 @@ export async function onRequestPost(context) {
         prompt,
         imageUrl,
         imageBase64,
+        debug: debug || undefined,
         generatedAt: Date.now(),
       });
     } catch (err) {
       console.error('Upstream error', err?.message, err?.stack);
-      return jsonError(502, err?.message || 'Upstream error');
+      return jsonError(502, `Upstream: ${err?.message || 'unknown'}`);
     }
   } catch (fatal) {
     console.error('Fatal handler error', fatal?.message, fatal?.stack);
