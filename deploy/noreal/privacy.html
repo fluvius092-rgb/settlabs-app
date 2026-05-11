@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoReal — プライバシーポリシー</title>
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<nav class="site-nav">
+  <a class="logo" href="/">SettLabs.</a>
+  <ul class="nav-links">
+    <li><a href="/noreal/">NoReal</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>NoReal プライバシーポリシー</h1>
+    <p class="meta">最終更新日: 2026年5月10日</p>
+  </div>
+
+  <article class="prose">
+    <p>NoReal（以下「本アプリ」）は、SettLabs が提供する AI 背景生成カメラアプリです。本ポリシーは、本アプリの利用に伴うユーザー情報の取り扱いについて定めます。</p>
+
+    <h2>1. 取得する情報</h2>
+    <ul>
+      <li><strong>カメラで撮影した画像 / 端末から選択した画像</strong>: 被写体の切り抜き処理および AI 背景画像生成のために使用します。</li>
+      <li><strong>位置情報</strong>: 取得しません。</li>
+      <li><strong>連絡先・電話帳</strong>: 取得しません。</li>
+      <li><strong>広告識別子（AdMob）</strong>: 広告配信のため Google AdMob が取得します。</li>
+      <li><strong>クラッシュログ・利用統計</strong>: アプリの安定性向上のため匿名で取得する場合があります。</li>
+    </ul>
+
+    <h2>2. 画像データの取り扱い</h2>
+    <ul>
+      <li>撮影・選択された画像は端末上で被写体の切り抜き処理を行います。切り抜き後の被写体画像は AI 背景生成のために本サーバーへ送信されません。</li>
+      <li>AI 背景画像の生成リクエストは、選択カテゴリ・任意のテキストプロンプトのみを本サーバー（settlabs.app/api/generate-bg）に送信します。</li>
+      <li>本サーバーは外部 AI 画像生成プロバイダ（Together.ai 等）にプロンプトを中継します。送信プロンプトはプロバイダの規約に基づき扱われます。</li>
+      <li>生成画像は端末側のキャッシュに一時保存されます。サーバー側では永続保存しません。</li>
+      <li>レート制限のため、IP アドレスのハッシュ値を 24 時間以内の期間で一時保持します。</li>
+    </ul>
+
+    <h2>3. 広告について</h2>
+    <p>本アプリは Google AdMob を通じて広告を配信します。AdMob は広告識別子等の情報を取得し、ユーザーの興味に応じた広告を表示する場合があります。詳細は <a href="https://policies.google.com/privacy">Google プライバシーポリシー</a> をご確認ください。</p>
+    <p>パーソナライズド広告の同意は、初回起動時のシステムダイアログで選択できます。後から端末の設定で変更可能です。</p>
+
+    <h2>4. 通知について</h2>
+    <p>本アプリは 1 日 1 回ランダムな時刻にローカル通知を送信します。通知はオフにできます。サーバーからのプッシュ通知は行いません。</p>
+
+    <h2>5. 第三者サービス</h2>
+    <ul>
+      <li><strong>Google AdMob</strong>: 広告配信</li>
+      <li><strong>Together.ai</strong>: AI 画像生成</li>
+      <li><strong>Cloudflare</strong>: 通信中継</li>
+    </ul>
+
+    <h2>6. 児童のプライバシー</h2>
+    <p>本アプリは 13 歳未満の児童を主要な利用対象としていません。13 歳未満の方が本アプリを利用される場合は、保護者の同意のもとご利用ください。</p>
+
+    <h2>7. データ削除請求</h2>
+    <p>サーバー側でユーザーを特定可能な情報を保持していないため、削除請求の対象は基本的にありません。アプリ内のキャッシュは端末からアプリをアンインストールすることで完全に削除されます。</p>
+
+    <h2>8. 改定</h2>
+    <p>本ポリシーは予告なく改定することがあります。重要な変更がある場合はアプリ内またはこのページで告知します。</p>
+
+    <h2>9. お問い合わせ</h2>
+    <p>本ポリシーに関するご質問は <a href="/contact.html">お問い合わせフォーム</a> よりご連絡ください。</p>
+  </article>
+</main>
+</body>
+</html>
