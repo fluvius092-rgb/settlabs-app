@@ -2,7 +2,8 @@ name: APDM Auto Tweet
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 6時間ごと
+    # JST 8/12/18/22時（UTC 23/3/9/13時）— 1日4回・日中〜夜のみ
+    - cron: '0 23,3,9,13 * * *'
   workflow_dispatch: {}     # 手動実行用
 
 permissions:
