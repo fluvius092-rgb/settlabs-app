@@ -11,6 +11,9 @@ permissions:
 jobs:
   tweet:
     runs-on: ubuntu-latest
+    env:
+      # 2026年6月以降の Node.js 24 強制移行に先行対応（警告抑制）
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 

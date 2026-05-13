@@ -87,6 +87,33 @@ G. 中露共同爆撃機合同飛行・海軍合同演習
 - missile = ミサイル発射（landLat/landLng/apogee/range 必須）`;
 }
 
+// タイムアウト付き fetch（GitHub Actions runner ↔ Cloudflare Pages の一過性障害対策）
+async function fetchWithRetry(url, options, { timeoutMs = 90_000, retries = 3, backoffMs = 5_000 } = {}) {
+  let lastErr;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { ...options, signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!res.ok && res.status >= 500 && attempt < retries) {
+        console.warn(`  attempt ${attempt}: HTTP ${res.status}, retrying...`);
+        await new Promise((r) => setTimeout(r, backoffMs * attempt));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      clearTimeout(timer);
+      lastErr = err;
+      if (attempt < retries) {
+        console.warn(`  attempt ${attempt}: ${err.message}, retrying in ${backoffMs * attempt / 1000}s...`);
+        await new Promise((r) => setTimeout(r, backoffMs * attempt));
+      }
+    }
+  }
+  throw lastErr;
+}
+
 async function fetchIncidents() {
   const body = JSON.stringify({
     model: 'claude-sonnet-4-6',
@@ -96,7 +123,7 @@ async function fetchIncidents() {
     messages: [{ role: 'user', content: buildPrompt() }],
   });
 
-  const res = await fetch(APDM_URL, {
+  const res = await fetchWithRetry(APDM_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body,
@@ -338,7 +365,14 @@ async function main() {
   console.log('APDM Tweet Bot: 開始');
 
   console.log('事案を取得中...');
-  const rawIncidents = await fetchIncidents();
+  let rawIncidents;
+  try {
+    rawIncidents = await fetchIncidents();
+  } catch (err) {
+    // 一過性のネットワーク障害（ETIMEDOUT 等）は workflow を失敗扱いにしない
+    console.warn(`事案取得失敗（一過性の可能性あり、次回実行を待つ）: ${err.message}`);
+    return;
+  }
   const incidents = rawIncidents.filter(validateIncident);
   console.log(`取得件数: ${rawIncidents.length} (検証通過: ${incidents.length})`);
 
